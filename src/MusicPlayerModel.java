@@ -1,4 +1,5 @@
+import java.util.Observable;
 
-public class MusicPlayerModel {
+public class MusicPlayerModel extends Observable{
 
 }
