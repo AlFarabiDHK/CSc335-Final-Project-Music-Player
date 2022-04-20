@@ -17,7 +17,8 @@ public class MusicPlayerGUI extends Application implements Observer{
 	private MusicPlayerModel model;
 	private MusicPlayerController controller;
 	private static Color buttonColor = Color.GREEN;
-	private static int buttonRadius = 50;
+	private static int playButtonRadius = 50;
+	private static int smallButtonRadius = 30;
 	
 	@Override
 	public void start(Stage stage) throws Exception {
@@ -29,7 +30,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 		AnchorPane root = new AnchorPane();
 		root.setBackground(appBackground);
 		Scene scene = new Scene(root, 800, 600);
-		Circle playButton = new Circle(400, 500, buttonRadius);
+		Circle playButton = new Circle(400, 500, playButtonRadius);
 		playButton.setFill(buttonColor);
 		playButton.setOnMouseClicked( e ->{
 			if(!controller.getIsPlaying())
@@ -37,7 +38,23 @@ public class MusicPlayerGUI extends Application implements Observer{
 			else
 				controller.pauseSong();
 		});
+		Circle likeButton = new Circle(600, 500, smallButtonRadius);
+		likeButton.setFill(buttonColor);
+		likeButton.setOnMouseClicked(e -> {
+			if (controller.addFavSong(controller.getCurrentSong().getName())) {
+				likeButton.setFill(Color.RED); 
+			} else {
+				likeButton.setFill(buttonColor);
+			}
+		});
+		Circle shuffleButton = new Circle(200, 500, smallButtonRadius);
+		shuffleButton.setFill(buttonColor);
+		shuffleButton.setOnMouseClicked(e -> {
+			controller.shuffleSongs();
+		});
 		root.getChildren().add(playButton);
+		root.getChildren().add(likeButton);
+		root.getChildren().add(shuffleButton);
 		stage.setTitle("Music Player");
 		stage.setScene(scene);
 		stage.show();

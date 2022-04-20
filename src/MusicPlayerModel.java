@@ -1,6 +1,8 @@
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Observable;
+import java.util.TreeSet;
 
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -38,6 +40,31 @@ public class MusicPlayerModel extends Observable{
 	
 	public void pauseSong() {
 		audioPlayer.pause();
+	}
+	
+	public void shuffleSongs() {
+		Collections.shuffle(allSongs);
+	}
+	
+	public File getCurrentSong() {
+		return allSongs.get(currentSongIndex);
+	}
+	
+	public File getSong(String name) {
+		for (int i = 0; i < allSongs.size(); i++) {
+			if (name.equals(allSongs.get(i).getName())) {
+				return allSongs.get(i);
+			}
+		}
+		return null;
+	}
+	
+	public TreeSet<String> getLibrary() {
+		TreeSet<String> lib = new TreeSet<String>();
+		for (int i =  0; i < allSongs.size(); i++) {
+			lib.add(allSongs.get(i).getName());
+		}
+		return lib;
 	}
 	
 }
