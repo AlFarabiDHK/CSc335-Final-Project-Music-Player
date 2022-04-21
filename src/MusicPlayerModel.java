@@ -15,6 +15,7 @@ public class MusicPlayerModel extends Observable{
 	private File dir;
 	private File[] musicFiles;
 	private int currentSongIndex;
+	private boolean isNext;
 	
 	public MusicPlayerModel() {
 		allSongs = new ArrayList<File>();
@@ -28,12 +29,24 @@ public class MusicPlayerModel extends Observable{
 				System.out.println(musicFiles[i]);
 			}
 		}
-		
-		audio = new Media(allSongs.get(currentSongIndex).toURI().toString());
-		audioPlayer = new MediaPlayer(audio);
+		audioPlayer = new MediaPlayer(new Media(allSongs.get(currentSongIndex).toURI().toString()));
+		isNext = false;
 	}
 	
+	
+	
 	public void playSong() {
+		audioPlayer.setOnEndOfMedia( () -> {
+			if (currentSongIndex < allSongs.size()) {
+				currentSongIndex++;
+				isNext = true;
+			}
+		});
+		if (isNext) {
+			audioPlayer = new MediaPlayer(new Media(allSongs.get(currentSongIndex).toURI().toString()));
+			isNext = false;
+		}
+		
 		audioPlayer.play();
 		
 	}
@@ -44,6 +57,11 @@ public class MusicPlayerModel extends Observable{
 	
 	public void shuffleSongs() {
 		Collections.shuffle(allSongs);
+		isNext = true;
+	}
+	
+	public void setCurrentIndex(int index) {
+		this.currentSongIndex = index;
 	}
 	
 	public File getCurrentSong() {

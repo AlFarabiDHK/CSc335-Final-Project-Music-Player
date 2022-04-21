@@ -2,6 +2,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.TreeSet;
 
+import com.sun.media.jfxmedia.Media;
+
 public class MusicPlayerController {
 	
 	private MusicPlayerModel model;
@@ -29,7 +31,9 @@ public class MusicPlayerController {
 	// TODO add functionality to play new song
 	// after shuffling.
 	public void shuffleSongs() {
+		model.pauseSong();
 		model.shuffleSongs();
+		model.setCurrentIndex(0);
 		playSong();
 	}
 	
