@@ -1,9 +1,13 @@
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Observable;
+import java.util.Set;
 import java.util.TreeSet;
 
+import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableMap;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
@@ -16,6 +20,9 @@ public class MusicPlayerModel extends Observable{
 	private File[] musicFiles;
 	private int currentSongIndex;
 	private boolean isNext;
+	private Set<String> MetaKey;
+	private Collection<Object> MetaValue;
+	private ObservableMap<String, Object> MetaData;
 	
 	public MusicPlayerModel() {
 		allSongs = new ArrayList<File>();
@@ -29,8 +36,13 @@ public class MusicPlayerModel extends Observable{
 				System.out.println(musicFiles[i]);
 			}
 		}
-		audioPlayer = new MediaPlayer(new Media(allSongs.get(currentSongIndex).toURI().toString()));
+		audio = new Media(allSongs.get(currentSongIndex).toURI().toString());
+		audioPlayer = new MediaPlayer(audio);
 		isNext = false;
+		MetaData = audio.getMetadata();
+		MetaKey = audio.getMetadata().keySet();
+		MetaValue = audio.getMetadata().values(); 
+		
 	}
 	
 	
@@ -40,7 +52,9 @@ public class MusicPlayerModel extends Observable{
 			nextSong();
 		});
 		if (isNext) {
-			audioPlayer = new MediaPlayer(new Media(allSongs.get(currentSongIndex).toURI().toString()));
+			audio = new Media(allSongs.get(currentSongIndex).toURI().toString());
+			audioPlayer = new MediaPlayer(audio);
+//			getMetaData(allSongs.get(currentSongIndex));
 			isNext = false;
 		}
 		
@@ -84,12 +98,18 @@ public class MusicPlayerModel extends Observable{
 		return null;
 	}
 	
-	public void getMetaData(File song) {
-		audio = new Media(song.toURI().toString());
-		System.out.println(song.getName());
-		System.out.println(audio.getMetadata().isEmpty());
+	public ObservableMap<String, Object> getMetaData() {
+		 return MetaData;
+	}
+
+	public Set<String> getMetaKey() {
+		return MetaKey;
 	}
 	
+	public Collection<Object> getMetaValue() {
+		return MetaValue;
+	}
+
 	public TreeSet<String> getLibrary() {
 		TreeSet<String> lib = new TreeSet<String>();
 		for (int i =  0; i < allSongs.size(); i++) {

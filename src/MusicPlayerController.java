@@ -1,8 +1,13 @@
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Set;
 import java.util.TreeSet;
 
 import com.sun.media.jfxmedia.Media;
+
+import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableMap;
 
 public class MusicPlayerController {
 	
@@ -18,7 +23,7 @@ public class MusicPlayerController {
 	
 	public void playSong() {
 		model.playSong();
-		printMetaData();
+//		printMetaData();
 		isPlaying = true;
 	}
 	
@@ -38,8 +43,16 @@ public class MusicPlayerController {
 		playSong();
 	}
 	
-	public void printMetaData() {
-		model.getMetaData(model.getSong(model.getCurrentSong().getName()));
+	public ObservableMap<String, Object> getMetaData() {
+		return model.getMetaData();
+	}
+	
+	public Set<String> getMetaKey() {
+		return model.getMetaKey();
+	}
+	
+	public Collection<Object> getMetaValue() {
+		return model.getMetaValue();
 	}
 	
 	// Added functionality to add by name to allow
