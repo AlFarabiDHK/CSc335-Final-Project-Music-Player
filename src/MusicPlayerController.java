@@ -18,6 +18,7 @@ public class MusicPlayerController {
 	
 	public void playSong() {
 		model.playSong();
+		printMetaData();
 		isPlaying = true;
 	}
 	
@@ -35,6 +36,10 @@ public class MusicPlayerController {
 		model.shuffleSongs();
 		model.setCurrentIndex(0);
 		playSong();
+	}
+	
+	public void printMetaData() {
+		model.getMetaData(model.getSong(model.getCurrentSong().getName()));
 	}
 	
 	// Added functionality to add by name to allow

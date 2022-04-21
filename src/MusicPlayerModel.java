@@ -37,10 +37,7 @@ public class MusicPlayerModel extends Observable{
 	
 	public void playSong() {
 		audioPlayer.setOnEndOfMedia( () -> {
-			if (currentSongIndex < allSongs.size()) {
-				currentSongIndex++;
-				isNext = true;
-			}
+			nextSong();
 		});
 		if (isNext) {
 			audioPlayer = new MediaPlayer(new Media(allSongs.get(currentSongIndex).toURI().toString()));
@@ -48,11 +45,21 @@ public class MusicPlayerModel extends Observable{
 		}
 		
 		audioPlayer.play();
+		System.out.println("I play this bitch like I play ball");
+		
 		
 	}
 	
 	public void pauseSong() {
 		audioPlayer.pause();
+	}
+	
+	public void nextSong() {
+		if (currentSongIndex < allSongs.size()) {
+			currentSongIndex++;
+			isNext = true;
+		}
+		playSong();
 	}
 	
 	public void shuffleSongs() {
@@ -75,6 +82,12 @@ public class MusicPlayerModel extends Observable{
 			}
 		}
 		return null;
+	}
+	
+	public void getMetaData(File song) {
+		audio = new Media(song.toURI().toString());
+		System.out.println(song.getName());
+		System.out.println(audio.getMetadata().isEmpty());
 	}
 	
 	public TreeSet<String> getLibrary() {
