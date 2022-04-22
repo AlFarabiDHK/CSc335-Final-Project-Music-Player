@@ -28,9 +28,10 @@ public class MusicPlayerGUI extends Application implements Observer{
 	private MusicPlayerModel model;
 	private MusicPlayerController controller;
 	private static Color buttonColor = Color.GREEN;
+	private static Color whiteColor = Color.WHITE;
 	private static int playButtonRadius = 50;
 	private static int smallButtonRadius = 30;
-	
+	private static final int albumCoverDim = 300;
 	private Label artist;
 	private Label album;
 	private Label title;
@@ -125,15 +126,24 @@ public class MusicPlayerGUI extends Application implements Observer{
 	private void handleMetadata(String key, Object value) {
 	    if (key.equals("album")) {
 	      album.setText(value.toString());
+	      album.setTextFill(whiteColor);
+	      
 	    } else if (key.equals("artist")) {
 	      artist.setText(value.toString());
+	      artist.setTextFill(whiteColor);
 	    } if (key.equals("title")) {
 	      title.setText(value.toString());
+	      title.setTextFill(whiteColor);
 	    } if (key.equals("year")) {
 	      year.setText(value.toString());
+	      year.setTextFill(whiteColor);
 	    } if (key.equals("image")) {
 	    	System.out.println("Image exists");
 	      albumCover.setImage((Image)value);
+	      albumCover.setFitHeight(albumCoverDim);
+	      albumCover.setFitWidth(albumCoverDim);
+	      albumCover.setX(250);
+	      albumCover.setY(50);
 	    }
 	  }
 	
