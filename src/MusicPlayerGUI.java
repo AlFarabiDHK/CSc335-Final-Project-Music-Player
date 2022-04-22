@@ -72,7 +72,6 @@ public class MusicPlayerGUI extends Application implements Observer{
 		shuffleButton.setOnMouseClicked(e -> {
 			controller.shuffleSongs();
 			createMeta(controller.getCurrentSong());
-			System.out.println(controller.getCurrentSong().getName());
 		});
 		
 		//Temporary objects to view metadata.

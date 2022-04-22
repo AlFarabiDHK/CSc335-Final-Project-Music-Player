@@ -51,6 +51,7 @@ public class MusicPlayerModel extends Observable{
 		audioPlayer.setOnEndOfMedia( () -> {
 			nextSong();
 		});
+		System.out.println(isNext);
 		if (isNext) {
 			audio = new Media(allSongs.get(currentSongIndex).toURI().toString());
 			audioPlayer = new MediaPlayer(audio);
@@ -79,6 +80,7 @@ public class MusicPlayerModel extends Observable{
 	public void shuffleSongs() {
 		Collections.shuffle(allSongs);
 		isNext = true;
+		playSong();
 	}
 	
 	public void setCurrentIndex(int index) {

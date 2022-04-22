@@ -38,9 +38,8 @@ public class MusicPlayerController {
 	// after shuffling.
 	public void shuffleSongs() {
 		model.pauseSong();
-		model.shuffleSongs();
 		model.setCurrentIndex(0);
-		playSong();
+		model.shuffleSongs();
 	}
 	
 	public ObservableMap<String, Object> getMetaData() {
