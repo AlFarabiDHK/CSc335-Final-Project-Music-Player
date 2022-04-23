@@ -27,6 +27,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 public class MusicPlayerGUI extends Application implements Observer{
@@ -48,6 +49,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 	@Override
 	public void start(Stage stage) throws Exception {
 		model = new MusicPlayerModel();
+		model.addObserver(this);
 		controller = new MusicPlayerController(model);
 		CornerRadii corner = new CornerRadii(0);
 		Background appBackground = new Background(
@@ -62,7 +64,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 		Image liked = new Image("/LikedButton.png");
 		
 		Circle playButton = new Circle(400, 500, playButtonRadius);
-		playButton.setFill(new ImagePattern(play));
+		playButton.setFill(new ImagePattern(pause));
 		playButton.setOnMouseClicked( e ->{
 			createMeta(controller.getCurrentSong());
 			if(!controller.getIsPlaying()) {
@@ -94,12 +96,10 @@ public class MusicPlayerGUI extends Application implements Observer{
 		// Barely visible in black background.
 		// Recommended magnifying glass.
 		artist = new Label();
-		artist.setAlignment(Pos.TOP_CENTER);
 	    artist.setId("artist");
 	    album = new Label();
 	    album.setId("album");
 	    title = new Label();
-	    title.setAlignment(Pos.TOP_LEFT);
 	    title.setId("title");
 	    year = new Label();
 	    year.setId("year");
@@ -144,7 +144,6 @@ public class MusicPlayerGUI extends Application implements Observer{
 	    if (key.equals("album")) {
 	      album.setText(value.toString());
 	      album.setTextFill(whiteColor);
-	      
 	    } else if (key.equals("artist")) {
 	      artist.setText(value.toString());
 	      artist.setTextFill(whiteColor);
