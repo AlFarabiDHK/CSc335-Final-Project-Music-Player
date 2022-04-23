@@ -1,5 +1,6 @@
 import java.io.File;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Observable;
 import java.util.Observer;
@@ -42,6 +43,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 	public void start(Stage stage) throws Exception {
 		model = new MusicPlayerModel();
 		controller = new MusicPlayerController(model);
+		model.addObserver(this);
 		CornerRadii corner = new CornerRadii(0);
 		Background appBackground = new Background(
 				new BackgroundFill(Color.BLACK, corner, Insets.EMPTY));
@@ -51,7 +53,13 @@ public class MusicPlayerGUI extends Application implements Observer{
 		Circle playButton = new Circle(400, 500, playButtonRadius);
 		playButton.setFill(buttonColor);
 		playButton.setOnMouseClicked( e ->{
-			createMeta(controller.getCurrentSong());
+			ObservableMap<String, Object> metadata = controller.fetchMetadata(controller.getCurrentSong());
+			System.out.println(metadata.keySet());
+			for(String key: metadata.keySet())
+			{
+				System.out.println(key + ":"+ metadata.get(key));
+				handleMetadata(key, metadata.get(key));
+			}
 			if(!controller.getIsPlaying())
 				controller.playSong();
 			else
@@ -70,7 +78,13 @@ public class MusicPlayerGUI extends Application implements Observer{
 		shuffleButton.setFill(buttonColor);
 		shuffleButton.setOnMouseClicked(e -> {
 			controller.shuffleSongs();
-			createMeta(controller.getCurrentSong());
+			ObservableMap<String, Object> metadata = controller.fetchMetadata(controller.getCurrentSong());
+			System.out.println(metadata.keySet());
+			for(String key: metadata.keySet())
+			{
+				System.out.println(key + ":"+ metadata.get(key));
+				handleMetadata(key, metadata.get(key));
+			}
 			System.out.println(controller.getCurrentSong().getName());
 		});
 		
@@ -85,6 +99,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 	    title.setId("title");
 	    year = new Label();
 	    year.setId("year");
+	    
 	    // Need a default image
 	    albumCover = new ImageView();
 		
@@ -104,13 +119,17 @@ public class MusicPlayerGUI extends Application implements Observer{
 	}
 	
 	// Temporary function that fetches metadata and updates it.
-	private void createMeta(File song) {
-	    try {
+	/*private void createMeta(File song) {
+	    try 
+	    {
 	      media = new Media(song.toURI().toString());
-	      media.getMetadata().addListener(new MapChangeListener<String, Object>() {
+	      media.getMetadata().addListener(new MapChangeListener<String, Object>() 
+	      {
 	        @Override
-	        public void onChanged(Change<? extends String, ? extends Object> ch) {
-	          if (ch.wasAdded()) {
+	        public void onChanged(Change<? extends String, ? extends Object> ch) 
+	        {
+	          if (ch.wasAdded()) 
+	          {
 	            handleMetadata(ch.getKey(), ch.getValueAdded());
 	          }
 	        }
@@ -120,7 +139,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 	      // Handle construction errors
 	      System.out.println("Caught Exception: " + re.getMessage());
 	    }
-	  }
+	  }*/
 	
 	private void handleMetadata(String key, Object value) {
 	    if (key.equals("album")) {
@@ -140,6 +159,14 @@ public class MusicPlayerGUI extends Application implements Observer{
 	@Override
 	public void update(Observable o, Object arg) {
 		// TODO Auto-generated method stub
+		System.out.println("happening");
+		ObservableMap<String, Object> metadata = model.fetchMetadata(controller.getCurrentSong());
+		System.out.println(metadata.keySet());
+		for(String key: metadata.keySet())
+		{
+			System.out.println(key + ":"+ metadata.get(key));
+			handleMetadata(key, metadata.get(key));
+		}
 		
 	}
 

@@ -1,6 +1,7 @@
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -91,5 +92,10 @@ public class MusicPlayerController {
 	
 	public boolean getIsPlaying() {
 		return isPlaying;
+	}
+	
+	public ObservableMap<String, Object> fetchMetadata(File song)
+	{
+		return model.fetchMetadata(song);
 	}
 }

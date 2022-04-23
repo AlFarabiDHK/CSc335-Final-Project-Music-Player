@@ -2,8 +2,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Observable;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import javafx.collections.MapChangeListener;
@@ -23,16 +25,19 @@ public class MusicPlayerModel extends Observable{
 	private Set<String> MetaKey;
 	private Collection<Object> MetaValue;
 	private ObservableMap<String, Object> MetaData;
+	private TreeMap <File, ObservableMap<String, Object>> metadata;
 	
 	public MusicPlayerModel() {
 		allSongs = new ArrayList<File>();
-		
+		metadata = new TreeMap <File, ObservableMap<String, Object>>();
 		dir = new File("Songs");
 		musicFiles = dir.listFiles();
 		currentSongIndex = 0;
 		if(musicFiles != null) {
 			for (int i = 0; i < musicFiles.length; i++) {
 				allSongs.add(musicFiles[i]);
+				Media song = new Media(allSongs.get(i).toURI().toString());
+				metadata.put(musicFiles[i], song.getMetadata());
 				System.out.println(musicFiles[i]);
 			}
 		}
@@ -51,11 +56,13 @@ public class MusicPlayerModel extends Observable{
 		audioPlayer.setOnEndOfMedia( () -> {
 			nextSong();
 		});
-		if (isNext) {
-			audio = new Media(allSongs.get(currentSongIndex).toURI().toString());
+		if (isNext) 
+		{
+			this.audio = new Media(allSongs.get(currentSongIndex).toURI().toString());
 			audioPlayer = new MediaPlayer(audio);
-//			getMetaData(allSongs.get(currentSongIndex));
 			isNext = false;
+			setChanged();
+			notifyObservers();
 		}
 		
 		audioPlayer.play();
@@ -116,6 +123,39 @@ public class MusicPlayerModel extends Observable{
 			lib.add(allSongs.get(i).getName());
 		}
 		return lib;
+	}
+	
+	public ObservableMap<String, Object> fetchMetadata(File song)
+	{
+		/*//ObservableMap<String, Object> metadata = this.audio.getMetadata();
+		HashMap<String, Object> metadata = new HashMap<String, Object>();
+		try 
+	    {
+			System.out.println("here");
+	      audio.getMetadata().addListener(new MapChangeListener<String, Object>() 
+	      {
+	        @Override
+	        public void onChanged(Change<? extends String, ? extends Object> ch) 
+	        {
+	          if (ch.wasAdded()) 
+	          {
+	        	  System.out.println("here");
+	        	  metadata.put(ch.getKey(), ch.getValueAdded());
+	          }
+	        }
+	      });
+
+	    } catch (RuntimeException re) {
+	      // Handle construction errors
+	      System.out.println("Caught Exception: " + re.getMessage());
+	    }
+		System.out.println(metadata.keySet());
+		/*for(String key: metadata.keySet())
+		{
+			System.out.println(key + ":"+ metadata.get(key));
+		}*/
+		return metadata.get(song);
+		
 	}
 	
 }
