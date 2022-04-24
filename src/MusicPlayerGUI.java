@@ -10,6 +10,7 @@ import javafx.application.Application;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -17,11 +18,17 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 public class MusicPlayerGUI extends Application implements Observer{
@@ -43,6 +50,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 	@Override
 	public void start(Stage stage) throws Exception {
 		model = new MusicPlayerModel();
+		model.addObserver(this);
 		controller = new MusicPlayerController(model);
 		model.addObserver(this);
 		CornerRadii corner = new CornerRadii(0);
@@ -51,9 +59,16 @@ public class MusicPlayerGUI extends Application implements Observer{
 		AnchorPane root = new AnchorPane();
 		root.setBackground(appBackground);
 		Scene scene = new Scene(root, 800, 600);
+		Image play = new Image("/PlayButton.png");
+		Image pause = new Image("/PauseButton.png");
+		Image shuffle = new Image("/ShuffleButton.png");
+		Image like = new Image("/LikeButton.png");
+		Image liked = new Image("/LikedButton.png");
+		
 		Circle playButton = new Circle(400, 500, playButtonRadius);
-		playButton.setFill(buttonColor);
+		playButton.setFill(new ImagePattern(pause));
 		playButton.setOnMouseClicked( e ->{
+
 			ObservableMap<String, Object> metadata = controller.fetchMetadata(controller.getCurrentSong());
 			System.out.println(metadata.keySet());
 			for(String key: metadata.keySet())
@@ -61,22 +76,26 @@ public class MusicPlayerGUI extends Application implements Observer{
 				System.out.println(key + ":"+ metadata.get(key));
 				handleMetadata(key, metadata.get(key));
 			}
-			if(!controller.getIsPlaying())
+			if(!controller.getIsPlaying()) {
 				controller.playSong();
-			else
+				playButton.setFill(new ImagePattern(play));
+			}
+			else {
 				controller.pauseSong();
+				playButton.setFill(new ImagePattern(pause));
+			}
 		});
 		Circle likeButton = new Circle(600, 500, smallButtonRadius);
-		likeButton.setFill(buttonColor);
+		likeButton.setFill(new ImagePattern(like));
 		likeButton.setOnMouseClicked(e -> {
 			if (controller.addFavSong(controller.getCurrentSong().getName())) {
-				likeButton.setFill(Color.RED); 
+				likeButton.setFill(new ImagePattern(liked)); 
 			} else {
-				likeButton.setFill(buttonColor);
+				likeButton.setFill(new ImagePattern(like));
 			}
 		});
 		Circle shuffleButton = new Circle(200, 500, smallButtonRadius);
-		shuffleButton.setFill(buttonColor);
+		shuffleButton.setFill(new ImagePattern(shuffle));
 		shuffleButton.setOnMouseClicked(e -> {
 			controller.shuffleSongs();
 			ObservableMap<String, Object> metadata = controller.fetchMetadata(controller.getCurrentSong());
@@ -146,7 +165,6 @@ public class MusicPlayerGUI extends Application implements Observer{
 	    if (key.equals("album")) {
 	      album.setText(value.toString());
 	      album.setTextFill(whiteColor);
-	      
 	    } else if (key.equals("artist")) {
 	      artist.setText(value.toString());
 	      artist.setTextFill(whiteColor);
@@ -177,6 +195,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 			System.out.println(key + ":"+ metadata.get(key));
 			handleMetadata(key, metadata.get(key));
 		}
+		// Update cover art when next songs play
 		
 	}
 
