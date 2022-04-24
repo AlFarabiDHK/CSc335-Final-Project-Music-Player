@@ -36,17 +36,15 @@ public class MusicPlayerModel extends Observable{
 		if(musicFiles != null) {
 			for (int i = 0; i < musicFiles.length; i++) {
 				allSongs.add(musicFiles[i]);
-				Media song = new Media(allSongs.get(i).toURI().toString());
-				metadata.put(musicFiles[i], song.getMetadata());
+				//Media song = new Media(allSongs.get(i).toURI().toString());
+				//metadata.put(musicFiles[i], song.getMetadata());
 				System.out.println(musicFiles[i]);
 			}
 		}
 		audio = new Media(allSongs.get(currentSongIndex).toURI().toString());
+		metadata.put(allSongs.get(currentSongIndex), audio.getMetadata());
 		audioPlayer = new MediaPlayer(audio);
 		isNext = false;
-		MetaData = audio.getMetadata();
-		MetaKey = audio.getMetadata().keySet();
-		MetaValue = audio.getMetadata().values(); 
 		
 	}
 	
@@ -56,9 +54,12 @@ public class MusicPlayerModel extends Observable{
 		audioPlayer.setOnEndOfMedia( () -> {
 			nextSong();
 		});
+		System.out.println(isNext);
 		if (isNext) 
 		{
 			this.audio = new Media(allSongs.get(currentSongIndex).toURI().toString());
+			if(!metadata.containsKey(allSongs.get(currentSongIndex)))
+				metadata.put(allSongs.get(currentSongIndex), audio.getMetadata());
 			audioPlayer = new MediaPlayer(audio);
 			isNext = false;
 			setChanged();
@@ -86,6 +87,7 @@ public class MusicPlayerModel extends Observable{
 	public void shuffleSongs() {
 		Collections.shuffle(allSongs);
 		isNext = true;
+		playSong();
 	}
 	
 	public void setCurrentIndex(int index) {

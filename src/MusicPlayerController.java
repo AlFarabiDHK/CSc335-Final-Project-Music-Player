@@ -39,22 +39,10 @@ public class MusicPlayerController {
 	// after shuffling.
 	public void shuffleSongs() {
 		model.pauseSong();
-		model.shuffleSongs();
 		model.setCurrentIndex(0);
-		playSong();
+		model.shuffleSongs();
 	}
 	
-	public ObservableMap<String, Object> getMetaData() {
-		return model.getMetaData();
-	}
-	
-	public Set<String> getMetaKey() {
-		return model.getMetaKey();
-	}
-	
-	public Collection<Object> getMetaValue() {
-		return model.getMetaValue();
-	}
 	
 	// Added functionality to add by name to allow
 	// addition of songs to favorite list from library
