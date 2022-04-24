@@ -63,6 +63,8 @@ public class MusicPlayerGUI extends Application implements Observer{
 		Image shuffle = new Image("/ShuffleButton.png");
 		Image like = new Image("/LikeButton.png");
 		Image liked = new Image("/LikedButton.png");
+		Image next = new Image("/NextButton.png");
+		Image prev = new Image("/PreviousButton.png");
 		controller.playSong();
 		ObservableMap<String, Object> metadata1 = controller.fetchMetadata(controller.getCurrentSong());
 		for(String key: metadata1.keySet())
@@ -84,14 +86,25 @@ public class MusicPlayerGUI extends Application implements Observer{
 			}
 			if(!controller.getIsPlaying()) {
 				controller.playSong();
-				playButton.setFill(new ImagePattern(play));
+				playButton.setFill(new ImagePattern(pause));
 			}
 			else {
 				controller.pauseSong();
-				playButton.setFill(new ImagePattern(pause));
+				playButton.setFill(new ImagePattern(play));
 			}
 		});
-		Circle likeButton = new Circle(600, 500, smallButtonRadius);
+		
+		Circle nextButton = new Circle(550, 500, smallButtonRadius);
+		nextButton.setFill(new ImagePattern(next));
+		nextButton.setOnMouseClicked( e ->{
+			// go next
+		});
+		Circle previousButton = new Circle(250, 500, smallButtonRadius);
+		previousButton.setFill(new ImagePattern(prev));
+		previousButton.setOnMouseClicked( e ->{
+			// go prev
+		});
+		Circle likeButton = new Circle(700, 500, smallButtonRadius);
 		likeButton.setFill(new ImagePattern(like));
 		likeButton.setOnMouseClicked(e -> {
 			if (controller.addFavSong(controller.getCurrentSong().getName())) {
@@ -100,7 +113,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 				likeButton.setFill(new ImagePattern(like));
 			}
 		});
-		Circle shuffleButton = new Circle(200, 500, smallButtonRadius);
+		Circle shuffleButton = new Circle(100, 500, smallButtonRadius);
 		shuffleButton.setFill(new ImagePattern(shuffle));
 		shuffleButton.setOnMouseClicked(e -> {
 			controller.shuffleSongs();
@@ -139,6 +152,8 @@ public class MusicPlayerGUI extends Application implements Observer{
 		root.getChildren().add(playButton);
 		root.getChildren().add(likeButton);
 		root.getChildren().add(shuffleButton);
+		root.getChildren().add(nextButton);
+		root.getChildren().add(previousButton);
 		stage.setTitle("Music Player");
 		stage.setScene(scene);
 		stage.show();
