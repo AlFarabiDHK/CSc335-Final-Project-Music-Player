@@ -50,7 +50,6 @@ public class MusicPlayerGUI extends Application implements Observer{
 	@Override
 	public void start(Stage stage) throws Exception {
 		model = new MusicPlayerModel();
-		model.addObserver(this);
 		controller = new MusicPlayerController(model);
 		model.addObserver(this);
 		CornerRadii corner = new CornerRadii(0);
@@ -64,6 +63,13 @@ public class MusicPlayerGUI extends Application implements Observer{
 		Image shuffle = new Image("/ShuffleButton.png");
 		Image like = new Image("/LikeButton.png");
 		Image liked = new Image("/LikedButton.png");
+		controller.playSong();
+		ObservableMap<String, Object> metadata1 = controller.fetchMetadata(controller.getCurrentSong());
+		for(String key: metadata1.keySet())
+		{
+			System.out.println(key + ":"+ metadata1.get(key));
+			handleMetadata(key, metadata1.get(key));
+		}
 		
 		Circle playButton = new Circle(400, 500, playButtonRadius);
 		playButton.setFill(new ImagePattern(pause));
