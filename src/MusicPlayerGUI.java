@@ -23,6 +23,7 @@ import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.GridPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -113,6 +114,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 				likeButton.setFill(new ImagePattern(like));
 			}
 		});
+		
 		Circle shuffleButton = new Circle(100, 500, smallButtonRadius);
 		shuffleButton.setFill(new ImagePattern(shuffle));
 		shuffleButton.setOnMouseClicked(e -> {
@@ -130,15 +132,26 @@ public class MusicPlayerGUI extends Application implements Observer{
 		//Temporary objects to view metadata.
 		// Barely visible in black background.
 		// Recommended magnifying glass.
+
 		artist = new Label();
 	    artist.setId("artist");
+	    artist.setTranslateX(400);
+	    artist.setTranslateY(360);
 	    album = new Label();
 	    album.setId("album");
+	    album.setTranslateX(400);
+	    album.setTranslateY(360 + 15);
+	    
 	    title = new Label();
 	    title.setId("title");
+	    title.setTranslateX(400);
+	    title.setTranslateY(360 + 30);
+	    
 	    year = new Label();
 	    year.setId("year");
-	    
+	    year.setTranslateX(400);
+	    year.setTranslateY(360 + 45);
+	   
 	    // Need a default image
 	    albumCover = new ImageView();
 		
@@ -147,7 +160,6 @@ public class MusicPlayerGUI extends Application implements Observer{
 		root.getChildren().add(album);
 		root.getChildren().add(year);
 		root.getChildren().add(albumCover);
-		
 		
 		root.getChildren().add(playButton);
 		root.getChildren().add(likeButton);
@@ -186,15 +198,19 @@ public class MusicPlayerGUI extends Application implements Observer{
 	    if (key.equals("album")) {
 	      album.setText(value.toString());
 	      album.setTextFill(whiteColor);
+	      album.setTextAlignment(TextAlignment.CENTER);
 	    } else if (key.equals("artist")) {
 	      artist.setText(value.toString());
 	      artist.setTextFill(whiteColor);
+	      artist.setTextAlignment(TextAlignment.CENTER);
 	    } if (key.equals("title")) {
 	      title.setText(value.toString());
 	      title.setTextFill(whiteColor);
+	      title.setTextAlignment(TextAlignment.CENTER);
 	    } if (key.equals("year")) {
 	      year.setText(value.toString());
 	      year.setTextFill(whiteColor);
+	      year.setTextAlignment(TextAlignment.CENTER);
 	    } if (key.equals("image")) {
 	    	System.out.println("Image exists");
 	      albumCover.setImage((Image)value);
