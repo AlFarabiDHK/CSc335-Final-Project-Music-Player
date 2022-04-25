@@ -88,6 +88,9 @@ public class MusicPlayerModel extends Observable{
 		Collections.shuffle(allSongs);
 		isNext = true;
 		playSong();
+		isNext = false;
+		//setChanged();
+		//notifyObservers();
 	}
 	
 	public void setCurrentIndex(int index) {

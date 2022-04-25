@@ -38,6 +38,8 @@ public class MusicPlayerGUI extends Application implements Observer{
 	private MusicPlayerController controller;
 	private static Color buttonColor = Color.GREEN;
 	private static Color whiteColor = Color.WHITE;
+	private static int windowWidth = 800;
+	private static int windowHeight = 600;
 	private static int playButtonRadius = 50;
 	private static int smallButtonRadius = 30;
 	private static final int albumCoverDim = 300;
@@ -58,7 +60,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 				new BackgroundFill(Color.BLACK, corner, Insets.EMPTY));
 		AnchorPane root = new AnchorPane();
 		root.setBackground(appBackground);
-		Scene scene = new Scene(root, 800, 600);
+		Scene scene = new Scene(root,windowWidth,windowHeight);
 		Image play = new Image("/PlayButton.png");
 		Image pause = new Image("/PauseButton.png");
 		Image shuffle = new Image("/ShuffleButton.png");
@@ -66,7 +68,8 @@ public class MusicPlayerGUI extends Application implements Observer{
 		Image liked = new Image("/LikedButton.png");
 		Image next = new Image("/NextButton.png");
 		Image prev = new Image("/PreviousButton.png");
-		controller.playSong();
+		
+		//controller.playSong();
 		ObservableMap<String, Object> metadata1 = controller.fetchMetadata(controller.getCurrentSong());
 		for(String key: metadata1.keySet())
 		{
@@ -74,8 +77,8 @@ public class MusicPlayerGUI extends Application implements Observer{
 			handleMetadata(key, metadata1.get(key));
 		}
 		
-		Circle playButton = new Circle(400, 500, playButtonRadius);
-		playButton.setFill(new ImagePattern(pause));
+		Circle playButton = new Circle(windowWidth/2, windowHeight * 5/6, playButtonRadius);
+		playButton.setFill(new ImagePattern(play));
 		playButton.setOnMouseClicked( e ->{
 
 			ObservableMap<String, Object> metadata = controller.fetchMetadata(controller.getCurrentSong());
@@ -95,17 +98,17 @@ public class MusicPlayerGUI extends Application implements Observer{
 			}
 		});
 		
-		Circle nextButton = new Circle(550, 500, smallButtonRadius);
+		Circle nextButton = new Circle(windowWidth * 0.6875, windowHeight * 5/6, smallButtonRadius);
 		nextButton.setFill(new ImagePattern(next));
 		nextButton.setOnMouseClicked( e ->{
 			// go next
 		});
-		Circle previousButton = new Circle(250, 500, smallButtonRadius);
+		Circle previousButton = new Circle(windowWidth * 0.3125, windowHeight * 5/6, smallButtonRadius);
 		previousButton.setFill(new ImagePattern(prev));
 		previousButton.setOnMouseClicked( e ->{
 			// go prev
 		});
-		Circle likeButton = new Circle(700, 500, smallButtonRadius);
+		Circle likeButton = new Circle(windowWidth * 7/8, windowHeight * 5/6, smallButtonRadius);
 		likeButton.setFill(new ImagePattern(like));
 		likeButton.setOnMouseClicked(e -> {
 			if (controller.addFavSong(controller.getCurrentSong().getName())) {
@@ -115,7 +118,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 			}
 		});
 		
-		Circle shuffleButton = new Circle(100, 500, smallButtonRadius);
+		Circle shuffleButton = new Circle(windowWidth * 1/8, windowHeight * 5/6, smallButtonRadius);
 		shuffleButton.setFill(new ImagePattern(shuffle));
 		shuffleButton.setOnMouseClicked(e -> {
 			controller.shuffleSongs();
@@ -127,34 +130,40 @@ public class MusicPlayerGUI extends Application implements Observer{
 				handleMetadata(key, metadata.get(key));
 			}
 			System.out.println(controller.getCurrentSong().getName());
+			
 		});
 		
 		//Temporary objects to view metadata.
 		// Barely visible in black background.
 		// Recommended magnifying glass.
-
+		
+		double textOffset = 0.025 * windowHeight;
 		artist = new Label();
 	    artist.setId("artist");
-	    artist.setTranslateX(400);
-	    artist.setTranslateY(360);
+	    artist.setTranslateX(windowWidth/2);
+	    artist.setTranslateY(windowHeight*3/5 + 0 * textOffset);
 	    album = new Label();
 	    album.setId("album");
-	    album.setTranslateX(400);
-	    album.setTranslateY(360 + 15);
+	    album.setTranslateX(windowWidth/2);
+	    album.setTranslateY(windowHeight*3/5 + 1 * textOffset);
 	    
 	    title = new Label();
 	    title.setId("title");
-	    title.setTranslateX(400);
-	    title.setTranslateY(360 + 30);
+	    title.setTranslateX(windowWidth/2);
+	    title.setTranslateY(windowHeight*3/5 + 2 * textOffset);
 	    
 	    year = new Label();
 	    year.setId("year");
-	    year.setTranslateX(400);
-	    year.setTranslateY(360 + 45);
+	    year.setTranslateX(windowWidth/2);
+	    year.setTranslateY(windowHeight*3/5 + 3 * textOffset);
 	   
 	    // Need a default image
-	    albumCover = new ImageView();
-		
+	    Image defaultImage = new Image("/default-cover.jpg");
+	    albumCover = new ImageView(defaultImage);
+	    albumCover.setFitHeight(albumCoverDim);
+	    albumCover.setFitWidth(albumCoverDim);
+	    albumCover.setX(windowWidth * 0.3125);
+	    albumCover.setY(windowHeight * 1/12);
 		root.getChildren().add(title);
 		root.getChildren().add(artist);
 		root.getChildren().add(album);
@@ -216,8 +225,8 @@ public class MusicPlayerGUI extends Application implements Observer{
 	      albumCover.setImage((Image)value);
 	      albumCover.setFitHeight(albumCoverDim);
 	      albumCover.setFitWidth(albumCoverDim);
-	      albumCover.setX(250);
-	      albumCover.setY(50);
+	      albumCover.setX(windowWidth * 0.3125);
+		  albumCover.setY(windowHeight * 1/12);
 	    }
 	  }
 	
