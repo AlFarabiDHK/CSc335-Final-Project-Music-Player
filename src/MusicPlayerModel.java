@@ -22,9 +22,6 @@ public class MusicPlayerModel extends Observable{
 	private File[] musicFiles;
 	private int currentSongIndex;
 	private boolean isNext;
-	private Set<String> MetaKey;
-	private Collection<Object> MetaValue;
-	private ObservableMap<String, Object> MetaData;
 	private TreeMap <File, ObservableMap<String, Object>> metadata;
 	
 	public MusicPlayerModel() {
@@ -36,38 +33,39 @@ public class MusicPlayerModel extends Observable{
 		if(musicFiles != null) {
 			for (int i = 0; i < musicFiles.length; i++) {
 				allSongs.add(musicFiles[i]);
-				//Media song = new Media(allSongs.get(i).toURI().toString());
-				//metadata.put(musicFiles[i], song.getMetadata());
 				System.out.println(musicFiles[i]);
 			}
 		}
 		audio = new Media(allSongs.get(currentSongIndex).toURI().toString());
-		metadata.put(allSongs.get(currentSongIndex), audio.getMetadata());
 		audioPlayer = new MediaPlayer(audio);
+		audioPlayer.setOnEndOfMedia( () -> {
+			nextSong();
+		});
+		metadata.put(allSongs.get(currentSongIndex), audio.getMetadata());
 		isNext = false;
 		
 	}
 	
-	
-	
 	public void playSong() {
-		audioPlayer.setOnEndOfMedia( () -> {
-			nextSong();
-		});
 		System.out.println(isNext);
 		if (isNext) 
 		{
+			audioPlayer.stop();
+			audioPlayer.dispose();
 			this.audio = new Media(allSongs.get(currentSongIndex).toURI().toString());
-			if(!metadata.containsKey(allSongs.get(currentSongIndex)))
-				metadata.put(allSongs.get(currentSongIndex), audio.getMetadata());
 			audioPlayer = new MediaPlayer(audio);
+			audioPlayer.setOnEndOfMedia( () -> {
+				nextSong();
+			});
+			if(!metadata.containsKey(allSongs.get(currentSongIndex))) {
+				metadata.put(allSongs.get(currentSongIndex), audio.getMetadata());
+			}
 			isNext = false;
 			setChanged();
 			notifyObservers();
 		}
 		
 		audioPlayer.play();
-		System.out.println("I play this bitch like I play ball");
 		
 		
 	}
@@ -79,18 +77,26 @@ public class MusicPlayerModel extends Observable{
 	public void nextSong() {
 		if (currentSongIndex < allSongs.size()) {
 			currentSongIndex++;
-			isNext = true;
+		} else {
+			currentSongIndex = 0;
 		}
+		isNext = true;
 		playSong();
+	}
+	
+	public void previousSong() {
+		if (currentSongIndex != 0) {
+			currentSongIndex--;
+			isNext = true;
+			playSong();
+		}
 	}
 	
 	public void shuffleSongs() {
 		Collections.shuffle(allSongs);
+		currentSongIndex = 0;
 		isNext = true;
 		playSong();
-		isNext = false;
-		//setChanged();
-		//notifyObservers();
 	}
 	
 	public void setCurrentIndex(int index) {
@@ -109,18 +115,6 @@ public class MusicPlayerModel extends Observable{
 		}
 		return null;
 	}
-	
-	public ObservableMap<String, Object> getMetaData() {
-		 return MetaData;
-	}
-
-	public Set<String> getMetaKey() {
-		return MetaKey;
-	}
-	
-	public Collection<Object> getMetaValue() {
-		return MetaValue;
-	}
 
 	public TreeSet<String> getLibrary() {
 		TreeSet<String> lib = new TreeSet<String>();
@@ -132,33 +126,6 @@ public class MusicPlayerModel extends Observable{
 	
 	public ObservableMap<String, Object> fetchMetadata(File song)
 	{
-		/*//ObservableMap<String, Object> metadata = this.audio.getMetadata();
-		HashMap<String, Object> metadata = new HashMap<String, Object>();
-		try 
-	    {
-			System.out.println("here");
-	      audio.getMetadata().addListener(new MapChangeListener<String, Object>() 
-	      {
-	        @Override
-	        public void onChanged(Change<? extends String, ? extends Object> ch) 
-	        {
-	          if (ch.wasAdded()) 
-	          {
-	        	  System.out.println("here");
-	        	  metadata.put(ch.getKey(), ch.getValueAdded());
-	          }
-	        }
-	      });
-
-	    } catch (RuntimeException re) {
-	      // Handle construction errors
-	      System.out.println("Caught Exception: " + re.getMessage());
-	    }
-		System.out.println(metadata.keySet());
-		/*for(String key: metadata.keySet())
-		{
-			System.out.println(key + ":"+ metadata.get(key));
-		}*/
 		return metadata.get(song);
 		
 	}

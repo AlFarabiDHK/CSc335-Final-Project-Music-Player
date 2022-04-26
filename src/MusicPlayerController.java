@@ -38,9 +38,8 @@ public class MusicPlayerController {
 	// TODO add functionality to play new song
 	// after shuffling.
 	public void shuffleSongs() {
-		model.pauseSong();
-		model.setCurrentIndex(0);
 		model.shuffleSongs();
+		isPlaying = true;
 	}
 	
 	
@@ -80,6 +79,16 @@ public class MusicPlayerController {
 	
 	public boolean getIsPlaying() {
 		return isPlaying;
+	}
+	
+	public void nextSong() {
+		model.nextSong();
+		isPlaying = true;
+	}
+	
+	public void previousSong() {
+		model.previousSong();
+		isPlaying = true;
 	}
 	
 	public ObservableMap<String, Object> fetchMetadata(File song)
