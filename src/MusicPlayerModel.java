@@ -5,11 +5,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Observable;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
@@ -23,12 +26,17 @@ public class MusicPlayerModel extends Observable{
 	private int currentSongIndex;
 	private boolean isNext;
 	private TreeMap <File, ObservableMap<String, Object>> metadata;
+	private Timer progressTimer;
+	private TimerTask timerTask;
+	private ProgressBar progressBar;
+	private boolean inProgress;
 	
 	public MusicPlayerModel() {
 		allSongs = new ArrayList<File>();
 		metadata = new TreeMap <File, ObservableMap<String, Object>>();
 		dir = new File("Songs");
 		musicFiles = dir.listFiles();
+		progressBar = new ProgressBar();
 		currentSongIndex = 0;
 		if(musicFiles != null) {
 			for (int i = 0; i < musicFiles.length; i++) {
@@ -38,6 +46,7 @@ public class MusicPlayerModel extends Observable{
 		}
 		audio = new Media(allSongs.get(currentSongIndex).toURI().toString());
 		audioPlayer = new MediaPlayer(audio);
+		inProgress = false;
 		audioPlayer.setOnEndOfMedia( () -> {
 			nextSong();
 		});
@@ -65,16 +74,21 @@ public class MusicPlayerModel extends Observable{
 			notifyObservers();
 		}
 		
+		//beginProgress();
 		audioPlayer.play();
+		inProgress = true;
 		
 		
 	}
 	
 	public void pauseSong() {
+		//cancelProgress();
 		audioPlayer.pause();
+		inProgress = false;
 	}
 	
 	public void nextSong() {
+		//progressBar.setProgress(0);
 		if (currentSongIndex < allSongs.size()) {
 			currentSongIndex++;
 		} else {
@@ -85,6 +99,9 @@ public class MusicPlayerModel extends Observable{
 	}
 	
 	public void previousSong() {
+		
+		//if(inProgress)
+			//cancelProgress();
 		if (currentSongIndex != 0) {
 			currentSongIndex--;
 			isNext = true;
@@ -129,5 +146,37 @@ public class MusicPlayerModel extends Observable{
 		return metadata.get(song);
 		
 	}
+	
+	public void beginProgress() {
+		progressTimer = new Timer();
+		timerTask = new TimerTask() {
+			public void run() {
+				inProgress = true;
+				double curr = audioPlayer.getCurrentTime().toSeconds();
+				double finish = audio.getDuration().toSeconds();
+				progressBar.setProgress(curr/finish);
+				if(curr/finish == 1) {
+					cancelProgress();
+				}
+			}
+		};
+		
+		setChanged();
+		notifyObservers();
+		progressTimer.scheduleAtFixedRate(timerTask, 1000, 1000);
+		
+	}
+	
+	public void cancelProgress() {
+		inProgress = false;
+		progressTimer.cancel();
+		setChanged();
+		notifyObservers();
+	}
+	
+	public ProgressBar getProgressBar() {
+		return progressBar;
+	}
+	
 	
 }
