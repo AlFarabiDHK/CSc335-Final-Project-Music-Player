@@ -18,10 +18,12 @@ public class MusicPlayerController {
 	private MusicPlayerModel model;
 	private boolean isPlaying;
 	private ArrayList<String> favSongs;
+	private boolean loop;
 	public MusicPlayerController(MusicPlayerModel model) {
 		this.model = model;
 		isPlaying = false;
 		favSongs = new ArrayList<String>();
+		loop = false;
 	}
 	
 	public void playSong() {
@@ -89,7 +91,11 @@ public class MusicPlayerController {
 	
 	public void nextSong() {
 		model.nextSong();
-		isPlaying = true;
+		if(!loop)
+			if(model.getLoops() != 0)
+				isPlaying = false;
+		else
+			isPlaying = true;
 	}
 	
 	public void previousSong() {

@@ -26,8 +26,10 @@ public class MusicPlayerModel extends Observable{
 	private int currentSongIndex;
 	private boolean isNext;
 	private TreeMap <File, ObservableMap<String, Object>> metadata;
+	private int loops;
 	
-	public MusicPlayerModel() {
+	public MusicPlayerModel() 
+	{
 		allSongs = new ArrayList<File>();
 		metadata = new TreeMap <File, ObservableMap<String, Object>>();
 		dir = new File("Songs");
@@ -46,6 +48,7 @@ public class MusicPlayerModel extends Observable{
 		});
 		metadata.put(allSongs.get(currentSongIndex), audio.getMetadata());
 		isNext = false;
+		loops = 0;
 		
 	}
 	
@@ -67,8 +70,10 @@ public class MusicPlayerModel extends Observable{
 			setChanged();
 			notifyObservers();
 		}
-		
-		audioPlayer.play();
+		if (loops != 0)
+			audioPlayer.pause();
+		else
+			audioPlayer.play();
 		
 		
 	}
@@ -77,14 +82,17 @@ public class MusicPlayerModel extends Observable{
 		audioPlayer.pause();
 	}
 	
-	public void nextSong() {
-		if (currentSongIndex < allSongs.size()-1) {
+	public void nextSong() 
+	{
+		if (currentSongIndex < allSongs.size()-1) 
+		{
 			currentSongIndex++;
 		} 
 		
-		else {
-			System.out.println("here");
+		else 
+		{
 			currentSongIndex = 0;
+			loops++;
 		}
 		isNext = true;
 		playSong();
@@ -142,6 +150,11 @@ public class MusicPlayerModel extends Observable{
 	
 	public MediaPlayer getAudioPlayer() {
 		return audioPlayer;
+	}
+	
+	public int getLoops()
+	{
+		return this.loops;
 	}
 	
 	
