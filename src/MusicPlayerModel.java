@@ -78,9 +78,12 @@ public class MusicPlayerModel extends Observable{
 	}
 	
 	public void nextSong() {
-		if (currentSongIndex < allSongs.size()) {
+		if (currentSongIndex < allSongs.size()-1) {
 			currentSongIndex++;
-		} else {
+		} 
+		
+		else {
+			System.out.println("here");
 			currentSongIndex = 0;
 		}
 		isNext = true;
