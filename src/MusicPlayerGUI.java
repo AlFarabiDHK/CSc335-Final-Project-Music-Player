@@ -39,7 +39,6 @@ public class MusicPlayerGUI extends Application implements Observer{
 
 	private MusicPlayerModel model;
 	private MusicPlayerController controller;
-	private static Color buttonColor = Color.GREEN;
 	private static Color whiteColor = Color.WHITE;
 	private static int windowWidth = 800;
 	private static int windowHeight = 600;
@@ -74,6 +73,8 @@ public class MusicPlayerGUI extends Application implements Observer{
 		Image shuffle = new Image("/ShuffleButton.png");
 		Image next = new Image("/NextButton.png");
 		Image prev = new Image("/PreviousButton.png");
+		
+		
 		
 		like = new Image("/LikeButton.png");
 		liked = new Image("/LikedButton.png");
@@ -186,10 +187,22 @@ public class MusicPlayerGUI extends Application implements Observer{
 	    albumCover.setX(windowWidth * 0.3125);
 	    albumCover.setY(windowHeight * 1/12);
 	    
+	    progressBar = new ProgressBar(0.5);
+	    progressBar.setTranslateX(textOffset);
+	    progressBar.setTranslateY(windowHeight*3/5 + 5 * textOffset);
+	    progressBar.setMinWidth(windowWidth - 2 * textOffset);
 	    
+	    String progressBarCSS = 
+	    		 "--fx-background-color: linear-gradient(to bottom, derive(-fx-accent, -7%), derive(-fx-accent, 0%), derive(-fx-accent, -3%), derive(-fx-accent, -9%) );"
+	    		+ "--fx-background-insets: 3 3 4 3;"
+	    		+ "--fx-background-radius: 2;"
+	    		+ "--fx-padding: 0.75em;"
+	    		+ "}";
+	    progressBar.setStyle(progressBarCSS);
 		root.getChildren().add(title);
 		root.getChildren().add(artist);
 		root.getChildren().add(albumCover);
+		root.getChildren().add(progressBar);
 		
 		root.getChildren().add(playButton);
 		root.getChildren().add(likeButton);
@@ -244,9 +257,6 @@ public class MusicPlayerGUI extends Application implements Observer{
 	@Override
 	public void update(Observable o, Object arg) {
 		createMeta(controller.fetchMetadata(controller.getCurrentSong()));
-		//progressBar = model.getProgressBar();
-		//root.getChildren().add(progressBar);
-		
 		if(controller.isFavsong(controller.getCurrentSong())) {
 			likeButton.setFill(new ImagePattern(liked));
 		}
