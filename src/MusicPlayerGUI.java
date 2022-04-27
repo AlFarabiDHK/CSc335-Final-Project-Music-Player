@@ -251,6 +251,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 			likeButton.setFill(new ImagePattern(liked));
 		}
 		else {
+			
 			likeButton.setFill(new ImagePattern(like));
 		}
 	}

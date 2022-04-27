@@ -3,18 +3,24 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.TreeSet;
 
 import com.sun.media.jfxmedia.Media;
 
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
+import javafx.scene.control.ProgressBar;
 
 public class MusicPlayerController {
 	
 	private MusicPlayerModel model;
 	private boolean isPlaying;
 	private ArrayList<String> favSongs;
+	private Timer progressTimer;
+	private TimerTask timerTask;
+	private ProgressBar progressBar;
 	
 	public MusicPlayerController(MusicPlayerModel model) {
 		this.model = model;
@@ -98,5 +104,30 @@ public class MusicPlayerController {
 	public ObservableMap<String, Object> fetchMetadata(File song)
 	{
 		return model.fetchMetadata(song);
+	}
+	public void beginProgress() {
+		progressTimer = new Timer();
+		timerTask = new TimerTask() {
+			public void run() {
+				isPlaying = true;
+				double curr = model.getAudioPlayer().getCurrentTime().toSeconds();
+				double finish = model.getAudio().getDuration().toSeconds();
+				progressBar.setProgress(curr/finish);
+				if(curr/finish == 1) {
+					cancelProgress();
+				}
+			}
+		};
+		progressTimer.scheduleAtFixedRate(timerTask, 1000, 1000);
+		
+	}
+	
+	public void cancelProgress() {
+		isPlaying  = false;
+		progressTimer.cancel();
+	}
+	
+	public ProgressBar getProgressBar() {
+		return progressBar;
 	}
 }
