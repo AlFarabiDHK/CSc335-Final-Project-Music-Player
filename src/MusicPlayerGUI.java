@@ -52,6 +52,12 @@ public class MusicPlayerGUI extends Application implements Observer{
 	private ProgressBar progressBar;
 	private static Image defaultImage = new Image("/default-cover.jpg");
 	private AnchorPane root;
+	
+	private Circle likeButton;
+	private Image like;
+	private Image liked;
+	
+	
 	@Override
 	public void start(Stage stage) throws Exception {
 		model = new MusicPlayerModel();
@@ -66,10 +72,11 @@ public class MusicPlayerGUI extends Application implements Observer{
 		Image play = new Image("/PlayButton.png");
 		Image pause = new Image("/PauseButton.png");
 		Image shuffle = new Image("/ShuffleButton.png");
-		Image like = new Image("/LikeButton.png");
-		Image liked = new Image("/LikedButton.png");
 		Image next = new Image("/NextButton.png");
 		Image prev = new Image("/PreviousButton.png");
+		
+		like = new Image("/LikeButton.png");
+		liked = new Image("/LikedButton.png");
 		
 		//controller.playSong();
 		createMeta(controller.fetchMetadata(controller.getCurrentSong()));
@@ -121,7 +128,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 			playButton.setFill(new ImagePattern(pause));
 		});
 		
-		Circle likeButton = new Circle(windowWidth * 7/8, windowHeight * 5/6 + 2 * textOffset, smallButtonRadius);
+		likeButton = new Circle(windowWidth * 7/8, windowHeight * 5/6 + 2 * textOffset, smallButtonRadius);
 		likeButton.setFill(new ImagePattern(like));
 		likeButton.setOnMouseClicked(e -> {
 			if (controller.addFavSong(controller.getCurrentSong().getName())) {
@@ -137,6 +144,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 			controller.shuffleSongs();
 			createMeta(controller.fetchMetadata(controller.getCurrentSong()));
 			playButton.setFill(new ImagePattern(pause));
+			
 //			ObservableMap<String, Object> metadata = controller.fetchMetadata(controller.getCurrentSong());
 //			System.out.println(metadata.keySet());
 //			for(String key: metadata.keySet())
@@ -238,6 +246,13 @@ public class MusicPlayerGUI extends Application implements Observer{
 		createMeta(controller.fetchMetadata(controller.getCurrentSong()));
 		//progressBar = model.getProgressBar();
 		//root.getChildren().add(progressBar);
+		
+		if(controller.isFavsong(controller.getCurrentSong())) {
+			likeButton.setFill(new ImagePattern(liked));
+		}
+		else {
+			likeButton.setFill(new ImagePattern(like));
+		}
 	}
 
 	

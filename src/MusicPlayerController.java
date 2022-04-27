@@ -65,6 +65,10 @@ public class MusicPlayerController {
 		favSongs.remove(name);
 	}
 	
+	public boolean isFavsong(File curSong) {
+		return this.favSongs.contains(curSong.getName());
+	}
+	
 	public ArrayList<String> getFavSongs() {
 		return this.favSongs;
 	}
