@@ -15,6 +15,7 @@ import javafx.collections.ObservableMap;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 
 public class MusicPlayerModel extends Observable{
 
@@ -164,10 +165,15 @@ public class MusicPlayerModel extends Observable{
 		return audioPlayer;
 	}
 	
-//	public int getLoops()
-//	{
-//		return this.loops;
-//	}
+	public void setAudioPlayerTime(double duration) 
+	{
+		audioPlayer.seek(Duration.seconds(duration));
+	}
+	
+	public Duration getMax()
+	{
+		return audio.getDuration();
+	}
 	
 	
 }

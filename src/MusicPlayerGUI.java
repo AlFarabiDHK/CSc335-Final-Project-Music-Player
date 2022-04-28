@@ -7,6 +7,8 @@ import java.util.Observer;
 import java.util.Set;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
 import javafx.geometry.Insets;
@@ -14,6 +16,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -34,6 +37,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class MusicPlayerGUI extends Application implements Observer{
 
@@ -48,7 +52,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 	private Label artist;
 	private Label title;
 	private ImageView albumCover;
-	private ProgressBar progressBar;
+	private Slider progressBar;
 	private static Image defaultImage = new Image("/default-cover.jpg");
 	private AnchorPane root;
 	private Circle playButton;
@@ -189,10 +193,11 @@ public class MusicPlayerGUI extends Application implements Observer{
 	    albumCover.setX(windowWidth * 0.3125);
 	    albumCover.setY(windowHeight * 1/12);
 	    
-	    progressBar = new ProgressBar(0.5);
+	    progressBar = new Slider(0, 250, 0);
 	    progressBar.setTranslateX(textOffset);
 	    progressBar.setTranslateY(windowHeight*3/5 + 5 * textOffset);
 	    progressBar.setMinWidth(windowWidth - 2 * textOffset);
+	    //progressBar.setMax(controller.getMax().toSeconds());
 	    
 	    String progressBarCSS = 
 	    		 "--fx-background-color: linear-gradient(to bottom, derive(-fx-accent, -7%), derive(-fx-accent, 0%), derive(-fx-accent, -3%), derive(-fx-accent, -9%) );"
@@ -201,6 +206,24 @@ public class MusicPlayerGUI extends Application implements Observer{
 	    		+ "--fx-padding: 0.75em;"
 	    		+ "}";
 	    progressBar.setStyle(progressBarCSS);
+	    
+	    controller.getAudioPlayer().currentTimeProperty().addListener(new ChangeListener<Duration>() {
+	    	@Override
+	    	public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
+	    		// TODO Auto-generated method stub
+	    		progressBar.setValue(newValue.toSeconds());
+	    	}
+		});
+	    
+	    progressBar.setOnMousePressed(e -> {
+	    	controller.setAudioPlayerTime(progressBar.getValue());
+	    });
+	    
+	    progressBar.setOnMouseDragged(e -> {
+	    	controller.setAudioPlayerTime(progressBar.getValue());
+	    });
+	    
+	    
 		root.getChildren().add(title);
 		root.getChildren().add(artist);
 		root.getChildren().add(albumCover);
@@ -269,6 +292,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 		if (model.getIsPlaylistOver()) {
 			playButton.setFill(new ImagePattern(pause));
 		}
+		//progressBar.setMax(controller.getMax().toSeconds());
 	}
 
 	
