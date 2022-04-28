@@ -197,7 +197,6 @@ public class MusicPlayerGUI extends Application implements Observer{
 	    progressBar.setTranslateX(textOffset);
 	    progressBar.setTranslateY(windowHeight*3/5 + 5 * textOffset);
 	    progressBar.setMinWidth(windowWidth - 2 * textOffset);
-	    //progressBar.setMax(controller.getMax().toSeconds());
 	    
 	    String progressBarCSS = 
 	    		 "--fx-background-color: linear-gradient(to bottom, derive(-fx-accent, -7%), derive(-fx-accent, 0%), derive(-fx-accent, -3%), derive(-fx-accent, -9%) );"
@@ -206,23 +205,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 	    		+ "--fx-padding: 0.75em;"
 	    		+ "}";
 	    progressBar.setStyle(progressBarCSS);
-	    
-	    controller.getAudioPlayer().currentTimeProperty().addListener(new ChangeListener<Duration>() {
-	    	@Override
-	    	public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
-	    		// TODO Auto-generated method stub
-	    		progressBar.setValue(newValue.toSeconds());
-	    	}
-		});
-	    
-	    progressBar.setOnMousePressed(e -> {
-	    	controller.setAudioPlayerTime(progressBar.getValue());
-	    });
-	    
-	    progressBar.setOnMouseDragged(e -> {
-	    	controller.setAudioPlayerTime(progressBar.getValue());
-	    });
-	    
+	    progressBarController();
 	    
 		root.getChildren().add(title);
 		root.getChildren().add(artist);
@@ -278,6 +261,35 @@ public class MusicPlayerGUI extends Application implements Observer{
 	    }
 	  }
 	
+	private void progressBarController() 
+	{
+		controller.getAudioPlayer().currentTimeProperty().addListener(new ChangeListener<Duration>() {
+	    	@Override
+	    	public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
+	    		// TODO Auto-generated method stub
+	    		progressBar.setValue(newValue.toSeconds());
+	    	}
+		});
+	    
+	    progressBar.setOnMousePressed(e -> {
+	    	controller.setAudioPlayerTime(progressBar.getValue());
+	    });
+	    
+	    progressBar.setOnMouseDragged(e -> {
+	    	controller.setAudioPlayerTime(progressBar.getValue());
+	    });
+	    
+	    controller.getAudioPlayer().setOnReady(new Runnable() 
+	    {
+			
+			@Override
+			public void run() {
+			progressBar.setMax(controller.getMax().toSeconds());
+				
+			}
+		});
+	}
+	
 	
 	@Override
 	public void update(Observable o, Object arg) {
@@ -292,7 +304,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 		if (model.getIsPlaylistOver()) {
 			playButton.setFill(new ImagePattern(pause));
 		}
-		//progressBar.setMax(controller.getMax().toSeconds());
+		progressBarController();
 	}
 
 	
