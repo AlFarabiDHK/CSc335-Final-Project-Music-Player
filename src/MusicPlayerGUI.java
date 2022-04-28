@@ -51,8 +51,9 @@ public class MusicPlayerGUI extends Application implements Observer{
 	private ProgressBar progressBar;
 	private static Image defaultImage = new Image("/default-cover.jpg");
 	private AnchorPane root;
-	
+	private Circle playButton;
 	private Circle likeButton;
+	private Image pause;
 	private Image like;
 	private Image liked;
 	
@@ -69,7 +70,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 		root.setBackground(appBackground);
 		Scene scene = new Scene(root,windowWidth,windowHeight);
 		Image play = new Image("/PlayButton.png");
-		Image pause = new Image("/PauseButton.png");
+//		Image pause = new Image("/PauseButton.png");
 		Image shuffle = new Image("/ShuffleButton.png");
 		Image next = new Image("/NextButton.png");
 		Image prev = new Image("/PreviousButton.png");
@@ -78,6 +79,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 		
 		like = new Image("/LikeButton.png");
 		liked = new Image("/LikedButton.png");
+		pause = new Image("/PauseButton.png");
 		
 		//controller.playSong();
 		createMeta(controller.fetchMetadata(controller.getCurrentSong()));
@@ -90,7 +92,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 		
 		double textOffset = 0.025 * windowHeight;
 		
-		Circle playButton = new Circle(windowWidth/2, windowHeight * 5/6 + 2 * textOffset, playButtonRadius);
+		playButton = new Circle(windowWidth/2, windowHeight * 5/6 + 2 * textOffset, playButtonRadius);
 		playButton.setFill(new ImagePattern(play));
 		playButton.setOnMouseClicked( e ->{
 			
@@ -263,6 +265,9 @@ public class MusicPlayerGUI extends Application implements Observer{
 		else {
 			
 			likeButton.setFill(new ImagePattern(like));
+		}
+		if (model.getIsPlaylistOver()) {
+			playButton.setFill(new ImagePattern(pause));
 		}
 	}
 

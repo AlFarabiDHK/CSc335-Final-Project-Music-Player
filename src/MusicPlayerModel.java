@@ -26,7 +26,7 @@ public class MusicPlayerModel extends Observable{
 	private int currentSongIndex;
 	private boolean isNext;
 	private TreeMap <File, ObservableMap<String, Object>> metadata;
-	private int loops;
+	private boolean isPlaylistOver;
 	
 	public MusicPlayerModel() 
 	{
@@ -48,7 +48,7 @@ public class MusicPlayerModel extends Observable{
 		});
 		metadata.put(allSongs.get(currentSongIndex), audio.getMetadata());
 		isNext = false;
-		loops = 0;
+		isPlaylistOver = false;
 		
 	}
 	
@@ -70,11 +70,15 @@ public class MusicPlayerModel extends Observable{
 			setChanged();
 			notifyObservers();
 		}
-		if (loops != 0)
-			audioPlayer.pause();
-		else
+//		if (loops != 0)
+//			audioPlayer.pause();
+//		else
+//			audioPlayer.play();
+		if (!isPlaylistOver) {
 			audioPlayer.play();
-		
+		} else {
+			isPlaylistOver = false;
+		}
 		
 	}
 	
@@ -87,23 +91,27 @@ public class MusicPlayerModel extends Observable{
 		if (currentSongIndex < allSongs.size()-1) 
 		{
 			currentSongIndex++;
+			isNext = true;
+			playSong();
 		} 
 		
 		else 
 		{
 			currentSongIndex = 0;
-			loops++;
+			isNext = true;
+			isPlaylistOver = true;
+			playSong();
 		}
-		isNext = true;
-		playSong();
 	}
 	
 	public void previousSong() {
 		if (currentSongIndex != 0) {
 			currentSongIndex--;
-			isNext = true;
-			playSong();
+		} else {
+			currentSongIndex = musicFiles.length - 1;
 		}
+		isNext = true;
+		playSong();
 	}
 	
 	public void shuffleSongs() {
@@ -119,6 +127,10 @@ public class MusicPlayerModel extends Observable{
 	
 	public File getCurrentSong() {
 		return allSongs.get(currentSongIndex);
+	}
+	
+	public boolean getIsPlaylistOver() {
+		return isPlaylistOver;
 	}
 	
 	public File getSong(String name) {
@@ -152,10 +164,10 @@ public class MusicPlayerModel extends Observable{
 		return audioPlayer;
 	}
 	
-	public int getLoops()
-	{
-		return this.loops;
-	}
+//	public int getLoops()
+//	{
+//		return this.loops;
+//	}
 	
 	
 }

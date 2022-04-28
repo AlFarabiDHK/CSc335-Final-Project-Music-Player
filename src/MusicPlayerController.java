@@ -91,11 +91,12 @@ public class MusicPlayerController {
 	
 	public void nextSong() {
 		model.nextSong();
-		if(!loop)
-			if(model.getLoops() != 0)
-				isPlaying = false;
-		else
+		if (model.getIsPlaylistOver()) {
+			pauseSong();
+			isPlaying = false;
+		} else  {
 			isPlaying = true;
+		}
 	}
 	
 	public void previousSong() {
