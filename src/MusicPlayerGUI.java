@@ -13,6 +13,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -69,18 +71,28 @@ public class MusicPlayerGUI extends Application implements Observer{
 		root = new AnchorPane();
 		root.setBackground(appBackground);
 		Scene scene = new Scene(root,windowWidth,windowHeight);
+		scene.getStylesheets().add(getClass().getResource("/Menu.css").toExternalForm());
 		Image play = new Image("/PlayButton.png");
 //		Image pause = new Image("/PauseButton.png");
 		Image shuffle = new Image("/ShuffleButton.png");
 		Image next = new Image("/NextButton.png");
 		Image prev = new Image("/PreviousButton.png");
-		
-		
-		
+		Image menu = new Image("/MenuButton.png");
 		like = new Image("/LikeButton.png");
 		liked = new Image("/LikedButton.png");
 		pause = new Image("/PauseButton.png");
 		
+		
+		MenuButton Menu = new MenuButton("Options");
+		Menu.setStyle("-fx-background-color: #22b14d;");
+		Menu.setStyle("-fx-text-fill: black");
+		Menu.setGraphic(new ImageView(menu));
+		MenuItem MenuEqualizer = new MenuItem("Equalizer");
+		MenuItem MenuFavSongs = new MenuItem("Favourite");
+		MenuItem MenuLibrary = new MenuItem("Music Library");
+		Menu.getItems().add(MenuLibrary);
+		Menu.getItems().add(MenuEqualizer);
+		Menu.getItems().add(MenuFavSongs);
 		//controller.playSong();
 		createMeta(controller.fetchMetadata(controller.getCurrentSong()));
 //		ObservableMap<String, Object> metadata1 = controller.fetchMetadata(controller.getCurrentSong());
@@ -211,6 +223,8 @@ public class MusicPlayerGUI extends Application implements Observer{
 		root.getChildren().add(shuffleButton);
 		root.getChildren().add(nextButton);
 		root.getChildren().add(previousButton);
+		root.getChildren().add(Menu);
+		
 		stage.setTitle("Music Player");
 		stage.setScene(scene);
 		stage.show();
