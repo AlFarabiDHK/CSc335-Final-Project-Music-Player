@@ -105,6 +105,7 @@ public class MusicPlayerController {
 	
 	public void setCurrentIndex(int index) {
 		model.setCurrentIndex(index);
+		isPlaying = true;
 	}
 	
 	public int getSongIndex(String song) {

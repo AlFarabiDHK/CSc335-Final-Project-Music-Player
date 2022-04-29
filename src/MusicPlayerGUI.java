@@ -273,6 +273,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 			temp[i].setOnMouseClicked(e -> {
 				controller.setCurrentIndex(controller.getSongIndex(songName));
 				MainStage.setScene(MainScene);
+				playButton.setFill(new ImagePattern(pause));
 				System.out.println(controller.getCurrentSong().getName());
 			});
 			musicLabled.getChildren().add(temp[i]);
