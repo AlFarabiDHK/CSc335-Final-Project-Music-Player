@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javafx.application.Application;
 import javafx.collections.MapChangeListener;
@@ -16,6 +17,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -27,6 +29,7 @@ import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
@@ -53,6 +56,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 	private ProgressBar progressBar;
 	private static Image defaultImage = new Image("/default-cover.jpg");
 	private AnchorPane root;
+	private VBox LibRoot;
 	private Circle playButton;
 	private Circle likeButton;
 	private Image pause;
@@ -70,7 +74,14 @@ public class MusicPlayerGUI extends Application implements Observer{
 				new BackgroundFill(Color.BLACK, corner, Insets.EMPTY));
 		root = new AnchorPane();
 		root.setBackground(appBackground);
+		
+		VBox MusicLabled = new VBox();
+		MusicLabled.setBackground(appBackground);
+		MusicLabled.setAlignment(Pos.CENTER);
+		MusicLabled = addMusicLabkes(MusicLabled);
+		
 		Scene scene = new Scene(root,windowWidth,windowHeight);
+		Scene Library = new Scene(MusicLabled,windowWidth,windowHeight);
 		scene.getStylesheets().add(getClass().getResource("/Menu.css").toExternalForm());
 		Image play = new Image("/PlayButton.png");
 //		Image pause = new Image("/PauseButton.png");
@@ -93,6 +104,10 @@ public class MusicPlayerGUI extends Application implements Observer{
 		Menu.getItems().add(MenuLibrary);
 		Menu.getItems().add(MenuEqualizer);
 		Menu.getItems().add(MenuFavSongs);
+		
+		MenuLibrary.setOnAction(e -> {
+			stage.setScene(Library);
+		});
 		//controller.playSong();
 		createMeta(controller.fetchMetadata(controller.getCurrentSong()));
 //		ObservableMap<String, Object> metadata1 = controller.fetchMetadata(controller.getCurrentSong());
@@ -230,6 +245,21 @@ public class MusicPlayerGUI extends Application implements Observer{
 		stage.show();
 	}
 	
+	private VBox addMusicLabkes(VBox musicLabled) {
+		TreeSet<String> Library = controller.getLibrary();
+		Label temp[] = new Label[Library.size()];
+		int i = 0;
+		for(String songName: Library) {
+			temp[i] = new Label(songName);
+			temp[i].setMaxSize(windowWidth/2, windowHeight/10);
+			temp[i].setStyle("-fx-background-color: black;");
+			temp[i].setTextFill(Color.GREEN);
+			musicLabled.getChildren().add(temp[i]);
+			i += 1;
+		}
+		return musicLabled;
+	}
+
 	// Temporary function that fetches metadata and updates it.
 	private void createMeta(ObservableMap<String, Object> metamap) {
 		if (!(metamap.size() == 0)) {
