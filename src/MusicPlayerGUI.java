@@ -55,6 +55,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 	private Label title;
 	private ImageView albumCover;
 	private Slider progressBar;
+	private Rectangle progressRec;
 	private static Image defaultImage = new Image("/default-cover.jpg");
 	private AnchorPane root;
 	private Circle playButton;
@@ -81,7 +82,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 		Image next = new Image("/NextButton.png");
 		Image prev = new Image("/PreviousButton.png");
 		
-		
+		progressRec = new Rectangle();
 		
 		like = new Image("/LikeButton.png");
 		liked = new Image("/LikedButton.png");
@@ -203,7 +204,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 	    progressBar.setId("color-slider");
 	    
 	    progressBarController();
-	    
+	    root.getChildren().add(progressRec);
 		root.getChildren().add(title);
 		root.getChildren().add(artist);
 		root.getChildren().add(albumCover);
@@ -261,7 +262,6 @@ public class MusicPlayerGUI extends Application implements Observer{
 	private void progressBarController() 
 	{
 		root.getStylesheets().add(this.getClass().getResource("/root.css").toExternalForm());
-		Rectangle progressRec = new Rectangle(); 
 		progressRec.heightProperty().bind(progressBar.heightProperty());
         progressRec.widthProperty().bind(progressBar.widthProperty());
         progressRec.setTranslateX(textOffset);
@@ -270,7 +270,7 @@ public class MusicPlayerGUI extends Application implements Observer{
         progressRec.setFill(Color.web("#969696"));
         progressRec.setArcHeight(15);
         progressRec.setArcWidth(15);
-        root.getChildren().add(progressRec);
+        
 
         
     
@@ -278,12 +278,17 @@ public class MusicPlayerGUI extends Application implements Observer{
 	    	@Override
 	    	public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
 	    		progressBar.setValue(newValue.toSeconds());
+	    		String style = String.format("-fx-fill: linear-gradient(to right, #006400 %f%%, #969696 %f%%);",
+		    			progressBar.getValue() * 0.458, progressBar.getValue() * 0.458);
+	            progressRec.setStyle(style);
 	    	}
 		});
 	    
 	    progressBar.setOnMousePressed(e -> {
 	    	controller.setAudioPlayerTime(progressBar.getValue());
-	    	
+	    	String style = String.format("-fx-fill: linear-gradient(to right, #006400 %f%%, #969696 %f%%);",
+	    			progressBar.getValue() * 0.458, progressBar.getValue() * 0.458);
+            progressRec.setStyle(style);
 	    });
 	    
 	    progressBar.setOnMouseDragged(e -> {
