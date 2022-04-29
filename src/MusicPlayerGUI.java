@@ -33,6 +33,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
@@ -49,6 +50,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 	private static int playButtonRadius = 40;
 	private static int smallButtonRadius = 25;
 	private static final int albumCoverDim = windowHeight/2;
+	private static double textOffset = 0.025 * windowHeight;
 	private Label artist;
 	private Label title;
 	private ImageView albumCover;
@@ -94,7 +96,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 //			handleMetadata(key, metadata1.get(key));
 //		}
 		
-		double textOffset = 0.025 * windowHeight;
+		
 		
 		playButton = new Circle(windowWidth/2, windowHeight * 5/6 + 2 * textOffset, playButtonRadius);
 		playButton.setFill(new ImagePattern(play));
@@ -197,14 +199,9 @@ public class MusicPlayerGUI extends Application implements Observer{
 	    progressBar.setTranslateX(textOffset);
 	    progressBar.setTranslateY(windowHeight*3/5 + 5 * textOffset);
 	    progressBar.setMinWidth(windowWidth - 2 * textOffset);
+	    progressBar.setMaxHeight(2);
+	    progressBar.setId("color-slider");
 	    
-	    String progressBarCSS = 
-	    		 "--fx-background-color: linear-gradient(to bottom, derive(-fx-accent, -7%), derive(-fx-accent, 0%), derive(-fx-accent, -3%), derive(-fx-accent, -9%) );"
-	    		+ "--fx-background-insets: 3 3 4 3;"
-	    		+ "--fx-background-radius: 2;"
-	    		+ "--fx-padding: 0.75em;"
-	    		+ "}";
-	    progressBar.setStyle(progressBarCSS);
 	    progressBarController();
 	    
 		root.getChildren().add(title);
@@ -263,20 +260,37 @@ public class MusicPlayerGUI extends Application implements Observer{
 	
 	private void progressBarController() 
 	{
+		root.getStylesheets().add(this.getClass().getResource("/root.css").toExternalForm());
+		Rectangle progressRec = new Rectangle(); 
+		progressRec.heightProperty().bind(progressBar.heightProperty());
+        progressRec.widthProperty().bind(progressBar.widthProperty());
+        progressRec.setTranslateX(textOffset);
+	    progressRec.setTranslateY(windowHeight*3/5 + 5 * textOffset);
+	    //progressRec.setWidth(windowWidth - 2 * textOffset);
+        progressRec.setFill(Color.web("#969696"));
+        progressRec.setArcHeight(15);
+        progressRec.setArcWidth(15);
+        root.getChildren().add(progressRec);
+
+        
+    
 		controller.getAudioPlayer().currentTimeProperty().addListener(new ChangeListener<Duration>() {
 	    	@Override
 	    	public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
-	    		// TODO Auto-generated method stub
 	    		progressBar.setValue(newValue.toSeconds());
 	    	}
 		});
 	    
 	    progressBar.setOnMousePressed(e -> {
 	    	controller.setAudioPlayerTime(progressBar.getValue());
+	    	
 	    });
 	    
 	    progressBar.setOnMouseDragged(e -> {
 	    	controller.setAudioPlayerTime(progressBar.getValue());
+	    	String style = String.format("-fx-fill: linear-gradient(to right, #006400 %f%%, #969696 %f%%);",
+	    			progressBar.getValue() * 0.458, progressBar.getValue() * 0.458);
+            progressRec.setStyle(style);
 	    });
 	    
 	    controller.getAudioPlayer().setOnReady(new Runnable() 
