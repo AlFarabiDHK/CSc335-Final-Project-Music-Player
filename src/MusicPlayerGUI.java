@@ -272,41 +272,39 @@ public class MusicPlayerGUI extends Application implements Observer{
         progressRec.setArcWidth(15);
         
 
-        
-    
-		controller.getAudioPlayer().currentTimeProperty().addListener(new ChangeListener<Duration>() {
-	    	@Override
-	    	public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
-	    		progressBar.setValue(newValue.toSeconds());
-	    		String style = String.format("-fx-fill: linear-gradient(to right, #006400 %f%%, #969696 %f%%);",
-		    			progressBar.getValue() * 0.458, progressBar.getValue() * 0.458);
-	            progressRec.setStyle(style);
-	    	}
-		});
-	    
-	    progressBar.setOnMousePressed(e -> {
-	    	controller.setAudioPlayerTime(progressBar.getValue());
-	    	String style = String.format("-fx-fill: linear-gradient(to right, #006400 %f%%, #969696 %f%%);",
-	    			progressBar.getValue() * 0.458, progressBar.getValue() * 0.458);
-            progressRec.setStyle(style);
-	    });
-	    
-	    progressBar.setOnMouseDragged(e -> {
-	    	controller.setAudioPlayerTime(progressBar.getValue());
-	    	String style = String.format("-fx-fill: linear-gradient(to right, #006400 %f%%, #969696 %f%%);",
-	    			progressBar.getValue() * 0.458, progressBar.getValue() * 0.458);
-            progressRec.setStyle(style);
-	    });
-	    
+	  
 	    controller.getAudioPlayer().setOnReady(new Runnable() 
 	    {
 			
 			@Override
 			public void run() {
 			progressBar.setMax(controller.getMax().toSeconds());
+			System.out.println(controller.getMax().toSeconds());
 				
 			}
 		});
+	    controller.getAudioPlayer().currentTimeProperty().addListener(new ChangeListener<Duration>() {
+	    	@Override
+	    	public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
+	    		progressBar.setValue(newValue.toSeconds());
+	    		
+	    	}
+		});
+	    
+	    progressBar.setOnMousePressed(e -> {
+	    	controller.setAudioPlayerTime(progressBar.getValue());
+	    	String style = String.format("-fx-fill: linear-gradient(to right, #006400 %f%%, #969696 %f%%);",
+    				(progressBar.getValue() * controller.getMax().toSeconds())/100, (progressBar.getValue() * controller.getMax().toSeconds())/100);
+            progressRec.setStyle(style);
+	    });
+	    
+	    progressBar.setOnMouseDragged(e -> {
+	    	controller.setAudioPlayerTime(progressBar.getValue());
+	    	String style = String.format("-fx-fill: linear-gradient(to right, #006400 %f%%, #969696 %f%%);",
+    				(progressBar.getValue() * controller.getMax().toSeconds())/100, (progressBar.getValue() * controller.getMax().toSeconds())/100);
+            progressRec.setStyle(style);
+	    });
+	    
 	}
 	
 	
