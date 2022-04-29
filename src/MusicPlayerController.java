@@ -17,12 +17,11 @@ public class MusicPlayerController {
 	
 	private MusicPlayerModel model;
 	private boolean isPlaying;
-	private ArrayList<String> favSongs;
+	
 	private boolean loop;
 	public MusicPlayerController(MusicPlayerModel model) {
 		this.model = model;
 		isPlaying = false;
-		favSongs = new ArrayList<String>();
 		loop = false;
 	}
 	
@@ -54,27 +53,19 @@ public class MusicPlayerController {
 	// from library it will be accessed through getSong 
 	// in model.
 	public boolean addFavSong(String name) {
-		if (!favSongs.contains(name)) {
-			favSongs.add(name);
-			System.out.println(favSongs.toString());
-			return true;
-		} else {
-			removeFavSong(name);
-			System.out.println(favSongs.toString());
-			return false;
-		}
+		return model.addFavSong(name);
 	}
 	
 	public void removeFavSong(String name) {
-		favSongs.remove(name);
+		model.removeFavSong(name);
 	}
 	
 	public boolean isFavsong(File curSong) {
-		return this.favSongs.contains(curSong.getName());
+		return model.isFavsong(curSong);
 	}
 	
-	public ArrayList<String> getFavSongs() {
-		return this.favSongs;
+	public TreeSet<String> getFavSongs() {
+		return model.getFavSongs();
 	}
 	
 	public File getCurrentSong() {
@@ -104,9 +95,20 @@ public class MusicPlayerController {
 		isPlaying = true;
 	}
 	
-	public ObservableMap<String, Object> fetchMetadata(File song)
-	{
+	public ObservableMap<String, Object> fetchMetadata(File song) {
 		return model.fetchMetadata(song);
+	}
+	
+	public File getSong(String name) {
+		return model.getSong(name);
+	}
+	
+	public void setCurrentIndex(int index) {
+		model.setCurrentIndex(index);
+	}
+	
+	public int getSongIndex(String song) {
+		return model.getSongIndex(song);
 	}
 	
 }

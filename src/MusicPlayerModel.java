@@ -27,10 +27,12 @@ public class MusicPlayerModel extends Observable{
 	private boolean isNext;
 	private TreeMap <File, ObservableMap<String, Object>> metadata;
 	private boolean isPlaylistOver;
+	private TreeSet<String> favSongs;
 	
 	public MusicPlayerModel() 
 	{
 		allSongs = new ArrayList<File>();
+		favSongs = new TreeSet<String>();
 		metadata = new TreeMap <File, ObservableMap<String, Object>>();
 		dir = new File("Songs");
 		musicFiles = dir.listFiles();
@@ -121,8 +123,35 @@ public class MusicPlayerModel extends Observable{
 		playSong();
 	}
 	
+	public boolean addFavSong(String name) {
+		if (!favSongs.contains(name)) {
+			favSongs.add(name);
+			System.out.println(favSongs.toString());
+			return true;
+		} else {
+			removeFavSong(name);
+			System.out.println(favSongs.toString());
+			return false;
+		}
+	}
+	
+	public void removeFavSong(String name) {
+		favSongs.remove(name);
+	}
+	
+	public boolean isFavsong(File curSong) {
+		return this.favSongs.contains(curSong.getName());
+	}
+	
+	public TreeSet<String> getFavSongs() {
+		return this.favSongs;
+	}
+	
 	public void setCurrentIndex(int index) {
 		this.currentSongIndex = index;
+		isNext = true;
+		playSong();
+		
 	}
 	
 	public File getCurrentSong() {
@@ -162,6 +191,18 @@ public class MusicPlayerModel extends Observable{
 	
 	public MediaPlayer getAudioPlayer() {
 		return audioPlayer;
+	}
+	
+	public int getSongIndex(String song) {
+		int i = 0;
+		while (i < allSongs.size()) {
+			if (allSongs.get(i).getName().equals(song)) {
+				break;
+			}
+		i++;
+		}
+		System.out.println("Got till here");
+		return i;
 	}
 	
 //	public int getLoops()

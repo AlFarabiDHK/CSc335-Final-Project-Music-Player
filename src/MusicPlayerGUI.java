@@ -62,10 +62,13 @@ public class MusicPlayerGUI extends Application implements Observer{
 	private Image pause;
 	private Image like;
 	private Image liked;
+	private Scene MainScene;
+	private Stage MainStage;
 	
 	
 	@Override
-	public void start(Stage stage) throws Exception {
+	public void start(Stage MainStage) throws Exception {
+		this.MainStage = MainStage;
 		model = new MusicPlayerModel();
 		controller = new MusicPlayerController(model);
 		model.addObserver(this);
@@ -75,14 +78,12 @@ public class MusicPlayerGUI extends Application implements Observer{
 		root = new AnchorPane();
 		root.setBackground(appBackground);
 		
-		VBox MusicLabled = new VBox();
-		MusicLabled.setBackground(appBackground);
-		MusicLabled.setAlignment(Pos.CENTER);
-		MusicLabled = addMusicLabkes(MusicLabled);
 		
-		Scene scene = new Scene(root,windowWidth,windowHeight);
-		Scene Library = new Scene(MusicLabled,windowWidth,windowHeight);
-		scene.getStylesheets().add(getClass().getResource("/Menu.css").toExternalForm());
+		
+		
+		
+		MainScene = new Scene(root,windowWidth,windowHeight);
+		MainScene.getStylesheets().add(getClass().getResource("/Menu.css").toExternalForm());
 		Image play = new Image("/PlayButton.png");
 //		Image pause = new Image("/PauseButton.png");
 		Image shuffle = new Image("/ShuffleButton.png");
@@ -106,8 +107,23 @@ public class MusicPlayerGUI extends Application implements Observer{
 		Menu.getItems().add(MenuFavSongs);
 		
 		MenuLibrary.setOnAction(e -> {
-			stage.setScene(Library);
+			VBox LibraryView = new VBox();
+			LibraryView.setBackground(appBackground);
+			LibraryView.setAlignment(Pos.CENTER);
+			LibraryView = addMusicLables(controller.getLibrary(), LibraryView);
+			Scene Library = new Scene(LibraryView,windowWidth,windowHeight);
+			MainStage.setScene(Library);
 		});
+		
+		MenuFavSongs.setOnAction(e -> {
+			VBox FavoriteView = new VBox();
+			FavoriteView.setBackground(appBackground);
+			FavoriteView.setAlignment(Pos.CENTER);
+			FavoriteView = addMusicLables(controller.getFavSongs(), FavoriteView);
+			Scene Favorites = new Scene(FavoriteView,windowWidth,windowHeight);
+			MainStage.setScene(Favorites);
+		});
+		
 		//controller.playSong();
 		createMeta(controller.fetchMetadata(controller.getCurrentSong()));
 //		ObservableMap<String, Object> metadata1 = controller.fetchMetadata(controller.getCurrentSong());
@@ -240,13 +256,13 @@ public class MusicPlayerGUI extends Application implements Observer{
 		root.getChildren().add(previousButton);
 		root.getChildren().add(Menu);
 		
-		stage.setTitle("Music Player");
-		stage.setScene(scene);
-		stage.show();
+		MainStage.setTitle("Music Player");
+		MainStage.setScene(MainScene);
+		MainStage.show();
 	}
 	
-	private VBox addMusicLabkes(VBox musicLabled) {
-		TreeSet<String> Library = controller.getLibrary();
+	private VBox addMusicLables(TreeSet<String> Library, VBox musicLabled) {
+		System.out.println(Library.size());
 		Label temp[] = new Label[Library.size()];
 		int i = 0;
 		for(String songName: Library) {
@@ -254,6 +270,11 @@ public class MusicPlayerGUI extends Application implements Observer{
 			temp[i].setMaxSize(windowWidth/2, windowHeight/10);
 			temp[i].setStyle("-fx-background-color: black;");
 			temp[i].setTextFill(Color.GREEN);
+			temp[i].setOnMouseClicked(e -> {
+				controller.setCurrentIndex(controller.getSongIndex(songName));
+				MainStage.setScene(MainScene);
+				System.out.println(controller.getCurrentSong().getName());
+			});
 			musicLabled.getChildren().add(temp[i]);
 			i += 1;
 		}
