@@ -1,4 +1,5 @@
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -52,7 +53,7 @@ public class MusicPlayerController {
 	// be accessed by getCurrentSong in model and
 	// from library it will be accessed through getSong 
 	// in model.
-	public boolean addFavSong(String name) {
+	public boolean addFavSong(String name) throws IOException {
 		return model.addFavSong(name);
 	}
 	
@@ -111,5 +112,4 @@ public class MusicPlayerController {
 	public int getSongIndex(String song) {
 		return model.getSongIndex(song);
 	}
-	
 }

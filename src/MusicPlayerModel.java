@@ -1,9 +1,17 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Observable;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -29,7 +37,7 @@ public class MusicPlayerModel extends Observable{
 	private boolean isPlaylistOver;
 	private TreeSet<String> favSongs;
 	
-	public MusicPlayerModel() 
+	public MusicPlayerModel() throws IOException 
 	{
 		allSongs = new ArrayList<File>();
 		favSongs = new TreeSet<String>();
@@ -51,6 +59,43 @@ public class MusicPlayerModel extends Observable{
 		metadata.put(allSongs.get(currentSongIndex), audio.getMetadata());
 		isNext = false;
 		isPlaylistOver = false;
+		
+		try {
+			File favFile = new File("favorites.txt");
+			if (!favFile.exists()) {
+				FileWriter createFile = new FileWriter("favorites.txt");
+				createFile.close();
+			} 
+			Scanner favReader = new Scanner(favFile);
+			while (favReader.hasNextLine()) {
+		        favSongs.add(favReader.nextLine());
+		      }
+			favReader.close();
+		    } catch (IOException e) {
+		      System.out.println("An error occurred.");
+		      e.printStackTrace();
+		    }
+		
+		try {
+			FileWriter writeGit = new FileWriter(".gitignore");
+		      File checkGit = new File(".gitignore");
+		      Scanner myReader = new Scanner(checkGit);
+		      boolean checkFavs = false;
+		      while (myReader.hasNextLine()) {
+		    	  if (myReader.nextLine().equals("favorites.txt")) {
+		    		  checkFavs = true;
+		    		  break;
+		    	  }
+		      }
+		      myReader.close();
+		      if (!checkFavs) {
+		    	  writeGit.write("favorites.txt");
+		    	  writeGit.close();
+		      }
+		    } catch (FileNotFoundException e) {
+		      System.out.println("An error occurred.");
+		      e.printStackTrace();
+		    }
 		
 	}
 	
@@ -123,17 +168,46 @@ public class MusicPlayerModel extends Observable{
 		playSong();
 	}
 	
-	public boolean addFavSong(String name) {
+	public boolean addFavSong(String name) throws IOException {
 		if (!favSongs.contains(name)) {
 			favSongs.add(name);
+			try {
+			      FileWriter favWriter = new FileWriter("favorites.txt", true);
+			      favWriter.write(name + "\n");
+			      favWriter.close();
+			      System.out.println("Successfully wrote to the file.");
+			    } catch (IOException e) {
+			      System.out.println("An error occurred.");
+			      e.printStackTrace();
+			    }
 			System.out.println(favSongs.toString());
 			return true;
 		} else {
 			removeFavSong(name);
+			removeFavSongsFromFile(name);
 			System.out.println(favSongs.toString());
 			return false;
 		}
 	}
+	
+	public void removeFavSongsFromFile(String name) throws IOException {
+		   File inputFile = new File("favorites.txt");
+		   File tempFile = new File("TempFav.txt");
+
+		   BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+		   BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
+		   String currentLine;
+
+		   while((currentLine = reader.readLine()) != null) {
+		   String trimmedLine = currentLine.trim();
+		   if(trimmedLine.equals(name)) continue;
+		   writer.write(currentLine + "\n");
+		 }
+		   reader.close();
+		   writer.close();
+		   inputFile.delete();
+		   tempFile.renameTo(inputFile);
+		 }
 	
 	public void removeFavSong(String name) {
 		favSongs.remove(name);

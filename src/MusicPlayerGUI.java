@@ -1,4 +1,5 @@
 import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -175,12 +176,22 @@ public class MusicPlayerGUI extends Application implements Observer{
 		});
 		
 		likeButton = new Circle(windowWidth * 7/8, windowHeight * 5/6 + 2 * textOffset, smallButtonRadius);
-		likeButton.setFill(new ImagePattern(like));
+		if (controller.isFavsong(controller.getCurrentSong())) {
+			likeButton.setFill(new ImagePattern(liked));
+		} else {
+			likeButton.setFill(new ImagePattern(like));
+		}
+		
 		likeButton.setOnMouseClicked(e -> {
-			if (controller.addFavSong(controller.getCurrentSong().getName())) {
-				likeButton.setFill(new ImagePattern(liked)); 
-			} else {
-				likeButton.setFill(new ImagePattern(like));
+			try {
+				if (controller.addFavSong(controller.getCurrentSong().getName())) {
+					likeButton.setFill(new ImagePattern(liked)); 
+				} else {
+					likeButton.setFill(new ImagePattern(like));
+				}
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
 		});
 		
