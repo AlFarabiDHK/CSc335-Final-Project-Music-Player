@@ -125,6 +125,12 @@ public class MusicPlayerGUI extends Application implements Observer{
 			MainStage.setScene(Favorites);
 		});
 		
+		MenuEqualizer.setOnAction(e -> {
+			EqualizerScene equalizer = new EqualizerScene(controller);
+			Scene Equalizer = new Scene(equalizer.getGridPane(),windowWidth,windowHeight);
+			MainStage.setScene(Equalizer);
+		});
+		
 		//controller.playSong();
 		createMeta(controller.fetchMetadata(controller.getCurrentSong()));
 //		ObservableMap<String, Object> metadata1 = controller.fetchMetadata(controller.getCurrentSong());
