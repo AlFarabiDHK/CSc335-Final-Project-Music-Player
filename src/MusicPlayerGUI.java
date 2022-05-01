@@ -270,13 +270,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 	    progressBar.setTranslateY(windowHeight*3/5 + 5 * textOffset);
 	    progressBar.setMinWidth(windowWidth - 2 * textOffset);
 	    
-	    String progressBarCSS = 
-	    		 "{--fx-background-color: linear-gradient(to bottom, derive(-fx-accent, -7%), derive(-fx-accent, 0%), derive(-fx-accent, -3%), derive(-fx-accent, -9%));"
-	    		+ "--fx-background-insets: 3 3 4 3;"
-	    		+ "--fx-background-radius: 2;"
-	    		+ "--fx-padding: 0.75em;"
-	    		+ "}";
-	    progressBar.setStyle(progressBarCSS);
+	    
 		root.getChildren().add(title);
 		root.getChildren().add(artist);
 		root.getChildren().add(albumCover);
