@@ -11,8 +11,11 @@ import java.util.TreeSet;
 import com.sun.media.jfxmedia.Media;
 
 import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.media.EqualizerBand;
+import javafx.scene.media.MediaPlayer;
 
 public class MusicPlayerController {
 	
@@ -111,5 +114,14 @@ public class MusicPlayerController {
 	
 	public int getSongIndex(String song) {
 		return model.getSongIndex(song);
+	}
+	
+	public MediaPlayer getAudioPlayer() {
+		return model.getAudioPlayer();
+	}
+	
+	public ObservableList<EqualizerBand> getEqualizerBand()
+	{
+		return model.getEqualizerBand();
 	}
 }

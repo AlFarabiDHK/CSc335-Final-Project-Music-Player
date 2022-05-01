@@ -19,8 +19,10 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.media.EqualizerBand;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
@@ -279,10 +281,11 @@ public class MusicPlayerModel extends Observable{
 		return i;
 	}
 	
-//	public int getLoops()
-//	{
-//		return this.loops;
-//	}
+	public ObservableList<EqualizerBand> getEqualizerBand()
+	{
+		return audioPlayer.getAudioEqualizer().getBands();
+	}
+	
 	
 	
 }
