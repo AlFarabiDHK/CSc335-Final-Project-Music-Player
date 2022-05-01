@@ -63,6 +63,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 	private Image pause;
 	private Image like;
 	private Image liked;
+	private Image exit;
 	private Scene MainScene;
 	private Stage MainStage;
 	
@@ -94,11 +95,13 @@ public class MusicPlayerGUI extends Application implements Observer{
 		like = new Image("/LikeButton.png");
 		liked = new Image("/LikedButton.png");
 		pause = new Image("/PauseButton.png");
-		
+		exit = new Image("/ExitButton.png");
+		ImageView exitImageView = new ImageView(exit);
+		exitImageView.setFitHeight(20);
+		exitImageView.setFitWidth(20);
 		
 		MenuButton Menu = new MenuButton("Options");
-		Menu.setStyle("-fx-background-color: #22b14d;");
-		Menu.setStyle("-fx-text-fill: black");
+		Menu.setStyle("-fx-background-color: #22b14d;-fx-text-fill: black;");
 		Menu.setGraphic(new ImageView(menu));
 		MenuItem MenuEqualizer = new MenuItem("Equalizer");
 		MenuItem MenuFavSongs = new MenuItem("Favourite");
@@ -107,11 +110,18 @@ public class MusicPlayerGUI extends Application implements Observer{
 		Menu.getItems().add(MenuEqualizer);
 		Menu.getItems().add(MenuFavSongs);
 		
+		exitImageView.setOnMouseClicked(e ->{
+			MainStage.setScene(MainScene);
+		});
+		
 		MenuLibrary.setOnAction(e -> {
 			VBox LibraryView = new VBox();
 			LibraryView.setBackground(appBackground);
 			LibraryView.setAlignment(Pos.CENTER);
 			LibraryView = addMusicLables(controller.getLibrary(), LibraryView);
+			exitImageView.setX(windowWidth - 50);
+			exitImageView.setY(50);
+			LibraryView.getChildren().add(exitImageView);
 			Scene Library = new Scene(LibraryView,windowWidth,windowHeight);
 			MainStage.setScene(Library);
 		});
@@ -120,6 +130,9 @@ public class MusicPlayerGUI extends Application implements Observer{
 			VBox FavoriteView = new VBox();
 			FavoriteView.setBackground(appBackground);
 			FavoriteView.setAlignment(Pos.CENTER);
+			exitImageView.setX(windowWidth - 50);
+			exitImageView.setY(50);
+			FavoriteView.getChildren().add(exitImageView);
 			FavoriteView = addMusicLables(controller.getFavSongs(), FavoriteView);
 			Scene Favorites = new Scene(FavoriteView,windowWidth,windowHeight);
 			MainStage.setScene(Favorites);
@@ -127,6 +140,9 @@ public class MusicPlayerGUI extends Application implements Observer{
 		
 		MenuEqualizer.setOnAction(e -> {
 			EqualizerScene equalizer = new EqualizerScene(controller);
+			exitImageView.setX(windowWidth - 50);
+			exitImageView.setY(50);
+			equalizer.getGridPane().getChildren().add(exitImageView);
 			Scene Equalizer = new Scene(equalizer.getGridPane(),windowWidth,windowHeight);
 			MainStage.setScene(Equalizer);
 		});
