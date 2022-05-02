@@ -96,9 +96,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 		liked = new Image("/LikedButton.png");
 		pause = new Image("/PauseButton.png");
 		exit = new Image("/ExitButton.png");
-		ImageView exitImageView = new ImageView(exit);
-		exitImageView.setFitHeight(20);
-		exitImageView.setFitWidth(20);
+		
 		
 		MenuButton Menu = new MenuButton("Options");
 		Menu.setStyle("-fx-background-color: #22b14d;-fx-text-fill: black;");
@@ -109,8 +107,9 @@ public class MusicPlayerGUI extends Application implements Observer{
 		Menu.getItems().add(MenuLibrary);
 		Menu.getItems().add(MenuEqualizer);
 		Menu.getItems().add(MenuFavSongs);
-		
-		exitImageView.setOnMouseClicked(e ->{
+		Circle exitButton = new Circle(windowWidth, smallButtonRadius, smallButtonRadius/3);
+		exitButton.setFill(new ImagePattern(exit));
+		exitButton.setOnMouseClicked(e->{
 			MainStage.setScene(MainScene);
 		});
 		
@@ -118,10 +117,9 @@ public class MusicPlayerGUI extends Application implements Observer{
 			VBox LibraryView = new VBox();
 			LibraryView.setBackground(appBackground);
 			LibraryView.setAlignment(Pos.CENTER);
+			LibraryView.getChildren().add(exitButton);
 			LibraryView = addMusicLables(controller.getLibrary(), LibraryView);
-			exitImageView.setX(windowWidth - 50);
-			exitImageView.setY(50);
-			LibraryView.getChildren().add(exitImageView);
+			
 			Scene Library = new Scene(LibraryView,windowWidth,windowHeight);
 			MainStage.setScene(Library);
 		});
@@ -130,9 +128,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 			VBox FavoriteView = new VBox();
 			FavoriteView.setBackground(appBackground);
 			FavoriteView.setAlignment(Pos.CENTER);
-			exitImageView.setX(windowWidth - 50);
-			exitImageView.setY(50);
-			FavoriteView.getChildren().add(exitImageView);
+			FavoriteView.getChildren().add(exitButton);
 			FavoriteView = addMusicLables(controller.getFavSongs(), FavoriteView);
 			Scene Favorites = new Scene(FavoriteView,windowWidth,windowHeight);
 			MainStage.setScene(Favorites);
@@ -140,9 +136,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 		
 		MenuEqualizer.setOnAction(e -> {
 			EqualizerScene equalizer = new EqualizerScene(controller);
-			exitImageView.setX(windowWidth - 50);
-			exitImageView.setY(50);
-			equalizer.getGridPane().getChildren().add(exitImageView);
+			equalizer.getGridPane().getChildren().add(exitButton);
 			Scene Equalizer = new Scene(equalizer.getGridPane(),windowWidth,windowHeight);
 			MainStage.setScene(Equalizer);
 		});
@@ -295,7 +289,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 		for(String songName: Library) {
 			temp[i] = new Label(songName);
 			temp[i].setMaxSize(windowWidth/2, windowHeight/10);
-			temp[i].setStyle("-fx-background-color: black;");
+			temp[i].setStyle("-fx-background-color: black; -fx-border-color: white; -fx-border-width: 1px; -fx-padding: 10px;");
 			temp[i].setTextFill(Color.GREEN);
 			temp[i].setOnMouseClicked(e -> {
 				controller.setCurrentIndex(controller.getSongIndex(songName));
