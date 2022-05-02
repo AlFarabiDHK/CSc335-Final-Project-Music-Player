@@ -12,6 +12,8 @@ import com.sun.media.jfxmedia.Media;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 
 public class MusicPlayerController {
 	
@@ -109,4 +111,17 @@ public class MusicPlayerController {
 		return model.fetchMetadata(song);
 	}
 	
+	public void setAudioPlayerTime(double d) 
+	{
+		model.setAudioPlayerTime(d);
+	}
+	
+	public Duration getMax()
+	{
+		return model.getMax();
+	}
+	
+	public MediaPlayer getAudioPlayer() {
+		return model.getAudioPlayer();
+	}
 }
