@@ -1,4 +1,5 @@
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -10,23 +11,26 @@ import java.util.TreeSet;
 import com.sun.media.jfxmedia.Media;
 
 import javafx.collections.MapChangeListener;
+import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.media.EqualizerBand;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaPlayer;
 import javafx.util.Duration;
+
 
 public class MusicPlayerController {
 	
 	private MusicPlayerModel model;
 	private boolean isPlaying;
-	private ArrayList<String> favSongs;
+	
 	private boolean loop;
 	
 	public MusicPlayerController(MusicPlayerModel model) 
 	{
 		this.model = model;
 		isPlaying = false;
-		favSongs = new ArrayList<String>();
 		loop = false;
 	}
 	
@@ -57,28 +61,20 @@ public class MusicPlayerController {
 	// be accessed by getCurrentSong in model and
 	// from library it will be accessed through getSong 
 	// in model.
-	public boolean addFavSong(String name) {
-		if (!favSongs.contains(name)) {
-			favSongs.add(name);
-			System.out.println(favSongs.toString());
-			return true;
-		} else {
-			removeFavSong(name);
-			System.out.println(favSongs.toString());
-			return false;
-		}
+	public boolean addFavSong(String name) throws IOException {
+		return model.addFavSong(name);
 	}
 	
 	public void removeFavSong(String name) {
-		favSongs.remove(name);
+		model.removeFavSong(name);
 	}
 	
 	public boolean isFavsong(File curSong) {
-		return this.favSongs.contains(curSong.getName());
+		return model.isFavsong(curSong);
 	}
 	
-	public ArrayList<String> getFavSongs() {
-		return this.favSongs;
+	public TreeSet<String> getFavSongs() {
+		return model.getFavSongs();
 	}
 	
 	public File getCurrentSong() {
@@ -108,9 +104,21 @@ public class MusicPlayerController {
 		isPlaying = true;
 	}
 	
-	public ObservableMap<String, Object> fetchMetadata(File song)
-	{
+	public ObservableMap<String, Object> fetchMetadata(File song) {
 		return model.fetchMetadata(song);
+	}
+	
+	public File getSong(String name) {
+		return model.getSong(name);
+	}
+	
+	public void setCurrentIndex(int index) {
+		model.setCurrentIndex(index);
+		isPlaying = true;
+	}
+	
+	public int getSongIndex(String song) {
+		return model.getSongIndex(song);
 	}
 	
 	public void setAudioPlayerTime(double d) 
@@ -125,5 +133,10 @@ public class MusicPlayerController {
 	
 	public MediaPlayer getAudioPlayer() {
 		return model.getAudioPlayer();
+	}
+	
+	public ObservableList<EqualizerBand> getEqualizerBand()
+	{
+		return model.getEqualizerBand();
 	}
 }

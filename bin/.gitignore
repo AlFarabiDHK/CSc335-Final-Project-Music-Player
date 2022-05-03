@@ -1,8 +1,14 @@
-/ForwardButton.png
-/LikeButton.png
-/LikedButton.png
-/MusicPlayerController.class
+/Menu.css
+/MenuButton.png
+/MusicLibrary.png
+/New Text Document.txt
 /MusicPlayerGUI$1.class
+<<<<<<< HEAD
+/EqualizerScene.class
+/AbstractScene.class
+/AbstractView.class
+/ExitButton.png
+=======
 /MusicPlayerGUI.class
 /MusicPlayerLaunch.class
 /MusicPlayerModel.class
@@ -17,5 +23,10 @@
 /default-cover.jpg
 /MusicPlayerGUI$2.class
 /MusicPlayerGUI$3.class
+<<<<<<< HEAD
 /MusicPlayerGUI$4.class
 /root.css
+=======
+>>>>>>> master
+/MusicPlayerGUI$4.class
+>>>>>>> ea6e5e5b1448912958368178b11dca49beba5c10
