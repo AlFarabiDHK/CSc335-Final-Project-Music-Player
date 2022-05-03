@@ -21,7 +21,9 @@ public class MusicPlayerController {
 	private boolean isPlaying;
 	private ArrayList<String> favSongs;
 	private boolean loop;
-	public MusicPlayerController(MusicPlayerModel model) {
+	
+	public MusicPlayerController(MusicPlayerModel model) 
+	{
 		this.model = model;
 		isPlaying = false;
 		favSongs = new ArrayList<String>();
