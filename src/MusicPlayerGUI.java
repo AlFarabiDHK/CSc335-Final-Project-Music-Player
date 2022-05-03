@@ -138,11 +138,14 @@ public class MusicPlayerGUI extends Application implements Observer{
 			bp.setCenter(Sp);
 			Sp.setContent(LibraryView);
 			Sp.setStyle("-fx-background: black;");
+			Sp.setFitToWidth(true);
 //			Sp.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.NONE, corner, BorderWidths.EMPTY)));
 //			LibraryView.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.NONE, corner, BorderWidths.EMPTY)));
 			LibraryView.setBackground(appBackground);
 			LibraryView.setAlignment(Pos.CENTER);
-			LibraryView.getChildren().add(exitButton);
+			bp.setBackground(appBackground);
+			bp.setTop(exitButton);
+			LibraryView.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.NONE, corner, BorderWidths.EMPTY)));
 			LibraryView = addMusicLables(controller.getLibrary(), LibraryView);
 			
 			Scene Library = new Scene(bp,windowWidth,windowHeight);
@@ -151,15 +154,20 @@ public class MusicPlayerGUI extends Application implements Observer{
 		});
 		
 		MenuFavSongs.setOnAction(e -> {
+			BorderPane gp = new BorderPane();
 			ScrollPane FavScroll = new ScrollPane();
+			gp.setCenter(FavScroll);
 			VBox FavoriteView = new VBox();
-			FavoriteView.setPadding(new Insets(20));
+			FavoriteView.setPadding(new Insets(15));
 			FavScroll.setContent(FavoriteView);
 			FavScroll.setStyle("-fx-background: black;");
+			FavScroll.setFitToWidth(true);
 			FavoriteView.setAlignment(Pos.CENTER);
-			FavoriteView.getChildren().add(exitButton);
+			FavScroll.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.NONE, corner, BorderWidths.EMPTY)));
+			gp.setBackground(appBackground);
+			gp.setTop(exitButton);
 			FavoriteView = addMusicLables(controller.getFavSongs(), FavoriteView);
-			Scene Favorites = new Scene(FavScroll,windowWidth,windowHeight);
+			Scene Favorites = new Scene(gp,windowWidth,windowHeight);
 			Favorites.setFill(Color.BLACK);
 			MainStage.setScene(Favorites);
 		});
