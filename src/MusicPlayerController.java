@@ -16,6 +16,9 @@ import javafx.collections.ObservableMap;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.media.EqualizerBand;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
+
 
 public class MusicPlayerController {
 	
@@ -114,6 +117,16 @@ public class MusicPlayerController {
 	
 	public int getSongIndex(String song) {
 		return model.getSongIndex(song);
+	}
+	
+	public void setAudioPlayerTime(double d) 
+	{
+		model.setAudioPlayerTime(d);
+	}
+	
+	public Duration getMax()
+	{
+		return model.getMax();
 	}
 	
 	public MediaPlayer getAudioPlayer() {

@@ -3,7 +3,25 @@
 /MusicLibrary.png
 /New Text Document.txt
 /MusicPlayerGUI$1.class
+<<<<<<< HEAD
 /EqualizerScene.class
 /AbstractScene.class
 /AbstractView.class
 /ExitButton.png
+=======
+/MusicPlayerGUI.class
+/MusicPlayerLaunch.class
+/MusicPlayerModel.class
+/NextButton.png
+/PauseButton.png
+/PlayButton.png
+/PreviousButton.png
+/ReplayButton.png
+/RewindButton.png
+/ShuffleButton.png
+/VolumeButton.png
+/default-cover.jpg
+/MusicPlayerGUI$2.class
+/MusicPlayerGUI$3.class
+>>>>>>> master
+/MusicPlayerGUI$4.class

@@ -25,6 +25,7 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.media.EqualizerBand;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 
 public class MusicPlayerModel extends Observable{
 
@@ -268,7 +269,7 @@ public class MusicPlayerModel extends Observable{
 	public MediaPlayer getAudioPlayer() {
 		return audioPlayer;
 	}
-	
+
 	public int getSongIndex(String song) {
 		int i = 0;
 		while (i < allSongs.size()) {
@@ -286,6 +287,15 @@ public class MusicPlayerModel extends Observable{
 		return audioPlayer.getAudioEqualizer().getBands();
 	}
 	
+	public void setAudioPlayerTime(double duration) 
+	{
+		audioPlayer.seek(Duration.seconds(duration));
+	}
+	
+	public Duration getMax()
+	{
+		return audio.getDuration();
+	}
 	
 	
 }
