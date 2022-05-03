@@ -81,7 +81,8 @@ public class EqualizerScene extends AbstractView
 	private Slider createSlider(EqualizerBand band, double minimum, double maximum) {
 		final Slider slide = new Slider(minimum, maximum, band.getGain());
 		slide.getStyleClass().add("-fx-background-radius: 5; -fx-background-color: #222, #888, black;"
-				+ "-fx-background-insets: 0, 1 0 0 1, 1; -fx-padding: 2 10");
+				+ "-fx-background-insets: 0, 1 0 0 1, 1; -fx-padding: 2 10;");
+		
 		slide.setOrientation(Orientation.VERTICAL);
 		slide.valueProperty().bindBidirectional(band.gainProperty());
 		slide.setPrefWidth(44);

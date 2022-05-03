@@ -162,8 +162,12 @@ public class MusicPlayerGUI extends Application implements Observer{
 		
 		MenuEqualizer.setOnAction(e -> {
 			EqualizerScene equalizer = new EqualizerScene(controller);
-			equalizer.getGridPane().getChildren().add(exitButton);
+			equalizer.getGridPane().add(exitButton, 5, 0);
+			equalizer.getGridPane().setBackground(appBackground);
+			
 			Scene Equalizer = new Scene(equalizer.getGridPane(),windowWidth,windowHeight);
+			Equalizer.getStylesheets().add(getClass().getResource("/Menu.css").toExternalForm());
+			
 			MainStage.setScene(Equalizer);
 		});
 		
@@ -316,7 +320,9 @@ public class MusicPlayerGUI extends Application implements Observer{
 			temp[i] = new Label(songName);
 			temp[i].setAlignment(Pos.CENTER);
 			temp[i].setMaxSize(windowWidth/2, windowHeight/10);
-			temp[i].setStyle("-fx-background-color: black; -fx-border-color: white; -fx-border-width: 2px; -fx-padding: 20px");
+			temp[i].setStyle("-fx-background-color: black; -fx-border-color: white; "
+					+ "-fx-border-width: 2px; -fx-padding: 20px;"
+					+ "-fx-border-radius: 10;");
 			temp[i].setTextFill(Color.LIGHTGREEN);
 			temp[i].setOnMouseClicked(e -> {
 				controller.setCurrentIndex(controller.getSongIndex(songName));
