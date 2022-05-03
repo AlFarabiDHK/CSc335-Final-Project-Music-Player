@@ -8,6 +8,9 @@ import java.util.Observer;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -83,6 +86,8 @@ public class MusicPlayerGUI extends Application implements Observer{
 	private Stage MainStage;
 	
 	
+	private boolean isDarkMode = true;
+	
 	@Override
 	public void start(Stage MainStage) throws Exception {
 		this.MainStage = MainStage;
@@ -100,6 +105,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 		
 		
 		MainScene = new Scene(root,windowWidth,windowHeight);
+		MainScene.setFill(Color.BLACK);
 		MainScene.getStylesheets().add(getClass().getResource("/Menu.css").toExternalForm());
 		Image play = new Image("/PlayButton.png");
 //		Image pause = new Image("/PauseButton.png");
@@ -125,7 +131,8 @@ public class MusicPlayerGUI extends Application implements Observer{
 		Circle exitButton = new Circle(windowWidth, smallButtonRadius, smallButtonRadius/3);
 		exitButton.setFill(new ImagePattern(exit));
 		exitButton.setOnMouseClicked(e->{
-			MainStage.setScene(MainScene);
+			changeScene(MainScene);
+//			MainStage.setScene(MainScene);
 		});
 		
 		MenuLibrary.setOnAction(e -> {
@@ -150,7 +157,8 @@ public class MusicPlayerGUI extends Application implements Observer{
 			
 			Scene Library = new Scene(bp,windowWidth,windowHeight);
 			Library.setFill(Color.BLACK);
-			MainStage.setScene(Library);
+			changeScene(Library);
+//			MainStage.setScene(Library);
 		});
 		
 		MenuFavSongs.setOnAction(e -> {
@@ -169,7 +177,8 @@ public class MusicPlayerGUI extends Application implements Observer{
 			FavoriteView = addMusicLables(controller.getFavSongs(), FavoriteView);
 			Scene Favorites = new Scene(gp,windowWidth,windowHeight);
 			Favorites.setFill(Color.BLACK);
-			MainStage.setScene(Favorites);
+			changeScene(Favorites);
+//			MainStage.setScene(Favorites);
 		});
 		
 		MenuEqualizer.setOnAction(e -> {
@@ -178,9 +187,10 @@ public class MusicPlayerGUI extends Application implements Observer{
 			equalizer.getGridPane().setBackground(appBackground);
 			
 			Scene Equalizer = new Scene(equalizer.getGridPane(),windowWidth,windowHeight);
+			Equalizer.setFill(Color.BLACK);
 			Equalizer.getStylesheets().add(getClass().getResource("/Menu.css").toExternalForm());
-			
-			MainStage.setScene(Equalizer);
+			changeScene(Equalizer);
+//			MainStage.setScene(Equalizer);
 		});
 		
 		//controller.playSong();
@@ -310,7 +320,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 	    progressBar.setId("color-slider");
 
 		progressRec = new Rectangle();
-		
+		progressRec.setStyle("-fx-fill: linear-gradient(to right, #006400 0%, rgba(164, 164, 164, 0.8) 0%);");
 	    progressBarController();
 	    root.getChildren().add(progressRec);
 		root.getChildren().add(title);
@@ -344,7 +354,8 @@ public class MusicPlayerGUI extends Application implements Observer{
 			temp[i].setTextFill(Color.LIGHTGREEN);
 			temp[i].setOnMouseClicked(e -> {
 				controller.setCurrentIndex(controller.getSongIndex(songName));
-				MainStage.setScene(MainScene);
+				changeScene(MainScene);
+//				MainStage.setScene(MainScene);
 				playButton.setFill(new ImagePattern(pause));
 				System.out.println(controller.getCurrentSong().getName());
 			});
@@ -397,11 +408,14 @@ public class MusicPlayerGUI extends Application implements Observer{
 	{
 		root.getStylesheets().add(this.getClass().getResource("/root.css").toExternalForm());
 		progressRec.heightProperty().bind(progressBar.heightProperty());
-        //progressRec.widthProperty().bind(progressBar.widthProperty());
-        progressRec.setTranslateX(textOffset);
-	    progressRec.setTranslateY(windowHeight*3/5 + 5 * textOffset);
+//		progressRec.setHeight(2);
+//        progressRec.widthProperty().bind(progressBar.widthProperty());
+		progressRec.translateXProperty().bind(progressBar.translateXProperty());
+		progressRec.translateYProperty().bind(progressBar.translateYProperty());
+        //progressRec.setTranslateX(textOffset);
+	    //progressRec.setTranslateY(windowHeight*3/5 + 5 * textOffset);
 	    progressRec.setWidth(windowWidth - 2 * textOffset);
-        progressRec.setFill(Color.web("#969696"));
+        progressRec.setFill(Color.BLACK);
         progressRec.setArcHeight(15);
         progressRec.setArcWidth(15);
         
@@ -429,11 +443,11 @@ public class MusicPlayerGUI extends Application implements Observer{
 	    progressBar.valueProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> ov, Number old_val, Number new_val) {
             	if(!Double.isNaN(controller.getMax().toSeconds())) {
-            	String style = String.format("-fx-fill: linear-gradient(to right, #006400 %f%%, #969696 %f%%);",
-	    			((progressBar.getValue() * 100)/ controller.getMax().toSeconds()), ((progressBar.getValue() * 100)/ controller.getMax().toSeconds()));
+            	String style = String.format("-fx-fill: linear-gradient(to right, #006400 %f%%, rgba(164, 164, 164, 0.8) %f%%);",
+	    			((progressBar.getValue() * 100)/ controller.getMax().toSeconds()) + 0.1, ((progressBar.getValue() * 100)/ controller.getMax().toSeconds()) + 0.1);
 	    		progressRec.setStyle(style);
 	    		} else {
-	    			progressRec.setStyle("-fx-fill: linear-gradient(to right, #006400 0%, #969696 0%);");
+	    			progressRec.setStyle("-fx-fill: linear-gradient(to right, #006400 0%, rgba(164, 164, 164, 0.8) 0%);");
 	    		}
                
             }
@@ -450,6 +464,19 @@ public class MusicPlayerGUI extends Application implements Observer{
 	    
 	}
 	
+	private void changeScene(Scene sc) {
+		Timeline timeline = new Timeline();
+        KeyFrame key = new KeyFrame(Duration.millis(400),
+                       new KeyValue (MainStage.getScene().getRoot().opacityProperty(), 0)); 
+        timeline.getKeyFrames().add(key);  
+        timeline.play();
+        timeline.setOnFinished((ae) -> {
+        	Scene oldScene = MainStage.getScene();
+        	MainStage.setScene(sc); 
+        	oldScene.getRoot().setOpacity(1);
+        });
+        
+	}
 	
 	@Override
 	public void update(Observable o, Object arg) {

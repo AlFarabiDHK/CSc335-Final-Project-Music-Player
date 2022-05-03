@@ -59,6 +59,7 @@ public class EqualizerScene extends AbstractView
 			
 			Slider slide = createSlider(band, minimum, maximum);
 			final Label label = new Label(frequencyFormat(band.getCenterFrequency()));
+			label.setStyle("-fx-text-fill:WHITE;");
 			label.getStyleClass().addAll("mediaText", "eqLabel");
 			
 			GridPane.setHalignment(label, HPos.CENTER);
