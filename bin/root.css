@@ -5,6 +5,6 @@
 
 #color-slider .thumb{
     -fx-background-color: rgb(255, 255, 255);
-    -fx-pref-height: 20;
-    -fx-pref-width: 20;
+    -fx-pref-height: 10;
+    -fx-pref-width: 10;
 }

@@ -43,4 +43,11 @@
     -fx-background-color: -fx-menu-color; 
 }
 
+.label #lib-label{
+    -fx-background-color: black; 
+    -fx-border-color: white; 
+    -fx-border-width: 2px; 
+    -fx-padding: 20px;
+    -fx-border-radius: 10;
+}
 
