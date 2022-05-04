@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Observable;
 import java.util.Scanner;
 import java.util.Set;
@@ -36,15 +37,15 @@ public class MusicPlayerModel extends Observable{
 	private File[] musicFiles;
 	private int currentSongIndex;
 	private boolean isNext;
-	private TreeMap <File, ObservableMap<String, Object>> metadata;
+	private HashMap<File, ObservableMap<String, Object>> metadata;
 	private boolean isPlaylistOver;
-	private TreeSet<String> favSongs;
+	private HashSet<String> favSongs;
 	
 	public MusicPlayerModel() throws IOException 
 	{
 		allSongs = new ArrayList<File>();
-		favSongs = new TreeSet<String>();
-		metadata = new TreeMap <File, ObservableMap<String, Object>>();
+		favSongs = new HashSet<String>();
+		metadata = new HashMap <File, ObservableMap<String, Object>>();
 		dir = new File("Songs");
 		musicFiles = dir.listFiles();
 		currentSongIndex = 0;
@@ -220,7 +221,7 @@ public class MusicPlayerModel extends Observable{
 		return this.favSongs.contains(curSong.getName());
 	}
 	
-	public TreeSet<String> getFavSongs() {
+	public HashSet<String> getFavSongs() {
 		return this.favSongs;
 	}
 	
@@ -248,7 +249,15 @@ public class MusicPlayerModel extends Observable{
 		return null;
 	}
 
-	public TreeSet<String> getLibrary() {
+	public HashSet<String> getLibrary() {
+		HashSet<String> lib = new HashSet<String>();
+		for (int i =  0; i < allSongs.size(); i++) {
+			lib.add(allSongs.get(i).getName());
+		}
+		return lib;
+	}
+	
+	public TreeSet<String> getSortedLibrary() {
 		TreeSet<String> lib = new TreeSet<String>();
 		for (int i =  0; i < allSongs.size(); i++) {
 			lib.add(allSongs.get(i).getName());
