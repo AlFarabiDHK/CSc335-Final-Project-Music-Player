@@ -1,0 +1,59 @@
+* {
+    -fx-menu-color: #000;
+    -fx-menu-color-highlighted: #455a64;
+    -fx-menu-font-color: #FFFFFF;
+    -fx-menu-font-color-highlighted: #22b14d;
+}
+
+/* Menu Button */
+/* The menu button itself */    
+.menu-button {
+    -fx-scale-y: 1.2;
+    -fx-scale-x: 1.2;
+    -fx-background-color: rgba(0, 0, 0, 0);
+}
+
+/* MENU ITEM */
+/* The menu items */    
+.menu-item {
+    -fx-background-color: -fx-menu-color; 
+}
+
+/* The menu item text */   
+.menu-item .label {
+    -fx-text-fill: -fx-menu-font-color;
+}
+
+/* The menu item label (disabled) */   
+.menu-item .label:disabled {
+    -fx-opacity: 1.0;
+}    
+
+/* The menu item (hovered) */    
+.menu-item:focused, .menu-item:hovered {
+    -fx-background-color: -fx-menu-color-highlighted; 
+}
+
+/* The menu item text (hovered) */  
+.menu-item:focused .label, .menu-item:hovered .label {
+    -fx-text-fill: -fx-menu-font-color-highlighted;
+}
+
+/* Menu item background */
+/* if this doesn't exist then we get a white outline in menu*/  
+.context-menu {
+    -fx-background-color: -fx-menu-color; 
+}
+
+.menu-button > .arrow-button {
+    -fx-padding: 0;
+}
+
+.menu-button > .arrow-button > .arrow {
+    -fx-padding: 0;
+}
+
+.menu-button .arrow {
+    -fx-background-color: transparent;
+}
+

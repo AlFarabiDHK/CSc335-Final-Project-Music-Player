@@ -136,6 +136,7 @@ public class MusicPlayerController {
 		return model.getMax();
 	}
 	
+	
 	public MediaPlayer getAudioPlayer() {
 		return model.getAudioPlayer();
 	}

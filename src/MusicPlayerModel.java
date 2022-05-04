@@ -103,7 +103,8 @@ public class MusicPlayerModel extends Observable{
 		
 	}
 	
-	public void playSong() {
+	public void playSong() 
+	{
 		System.out.println(isNext);
 		if (isNext) 
 		{
