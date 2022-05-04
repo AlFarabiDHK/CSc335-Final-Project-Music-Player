@@ -94,6 +94,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 		Image prev = new Image("/PreviousButton.png");
 		Image menu = new Image("/MenuButton.png");
 		Image menuDark = new Image("/MenuButtonDak.png");
+		Image exitDark = new Image("/ExitButtonDark.png");
 		like = new Image("/LikeButton.png");
 		liked = new Image("/LikedButton.png");
 		pause = new Image("/PauseButton.png");
@@ -243,6 +244,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 				artist.setTextFill(black);
 				title.setTextFill(black);
 				controller.setColorMode(false);
+				exitButton.setFill(new ImagePattern(exitDark));
 			} else {
 				MainScene.setFill(black);
 				MenuMode.setText("Dark Mode Off");
@@ -250,6 +252,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 				artist.setTextFill(white);
 				title.setTextFill(white);
 				controller.setColorMode(true);
+				exitButton.setFill(new ImagePattern(exit));
 			}
 		});
 
