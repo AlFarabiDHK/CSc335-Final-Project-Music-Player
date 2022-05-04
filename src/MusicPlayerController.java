@@ -26,7 +26,7 @@ public class MusicPlayerController {
 	private MusicPlayerModel model;
 	private boolean isPlaying;
 	private boolean isDark;
-	
+	private boolean isSorted;
 	private boolean loop;
 	
 	public MusicPlayerController(MusicPlayerModel model) 
@@ -35,6 +35,7 @@ public class MusicPlayerController {
 		isPlaying = false;
 		isDark = true;
 		loop = false;
+		isSorted = false;
 	}
 	
 	public void playSong() {
@@ -82,6 +83,14 @@ public class MusicPlayerController {
 	
 	public File getCurrentSong() {
 		return model.getCurrentSong();
+	}
+	
+	public boolean getIsSorted() {
+		return this.isSorted;
+	}
+	
+	public void setIsSorted(boolean b) {
+		isSorted = b;
 	}
 	
 	public HashSet<String> getLibrary() {

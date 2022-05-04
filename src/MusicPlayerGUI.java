@@ -4,6 +4,7 @@ import java.util.HashSet;
 
 import java.util.Observable;
 import java.util.Observer;
+import java.util.TreeSet;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -16,6 +17,7 @@ import javafx.collections.ObservableMap;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
@@ -54,6 +56,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 	private static int smallButtonRadius = 25;
 	private static final int albumCoverDim = windowHeight/2;
 	private static double textOffset = 0.025 * windowHeight;
+	private VBox LibraryView;
 	private Label artist;
 	private Label title;
 	private ImageView albumCover;
@@ -102,6 +105,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 		exit = new Image("/ExitButton.png");
 		artist = new Label();
 		title = new Label();
+		LibraryView = new VBox();
 		artist.setId("artist");
 	    
 	    artist.setTranslateX(0);
@@ -139,40 +143,55 @@ public class MusicPlayerGUI extends Application implements Observer{
 		
 		MenuLibrary.setOnAction(e -> {
 			BorderPane bp = new BorderPane();
-			HBox addLabel = new HBox(325);
+			BorderPane bpS = new BorderPane();
+			HBox addLabel = new HBox(290);
+			HBox addLabelS = new HBox(290);
 			ScrollPane sp = new ScrollPane();
+			ScrollPane spS = new ScrollPane();
 			Label label = new Label("Library of Songs");
 				
-			VBox LibraryView = new VBox();
 			if(controller.getColorMode()) {
 				sp.getStylesheets().add(getClass().getResource("/Menu.css").toExternalForm());
 				sp.setStyle("-fx-background: black;");
 				bp.setBackground(appBackground);
+				spS.getStylesheets().add(getClass().getResource("/Menu.css").toExternalForm());
+				spS.setStyle("-fx-background: black;");
+				bpS.setBackground(appBackground);
 				LibraryView.setBorder(new Border(new BorderStroke(black, BorderStrokeStyle.NONE, corner, BorderWidths.EMPTY)));
 				label.setStyle("-fx-text-fill:WHITE; -fx-font-weight: bold;-fx-font-size: 20px;");
 			}else {
 				sp.getStylesheets().add(getClass().getResource("/MenuDark.css").toExternalForm());
 				sp.setStyle("-fx-background: white;");
 				bp.setBackground(appBackgroundWhite);
+				spS.getStylesheets().add(getClass().getResource("/MenuDark.css").toExternalForm());
+				spS.setStyle("-fx-background: white;");
+				bpS.setBackground(appBackgroundWhite);
 				LibraryView.setBorder(new Border(new BorderStroke(white, BorderStrokeStyle.NONE, corner, BorderWidths.EMPTY)));
 				label.setStyle("-fx-text-fill: BLACK; -fx-font-weight: bold;-fx-font-size: 20px;");
 			}
 			
+			Button b = new Button("Sort");
 			LibraryView.setPadding(new Insets(20));
 			bp.setCenter(sp);
-			sp.setContent(LibraryView);
+			bpS.setCenter(spS);
 			
 			sp.setFitToWidth(true);
+			spS.setFitToWidth(true);
 			LibraryView.setBackground(appBackground);
 			LibraryView.setAlignment(Pos.CENTER);
 			
+			addLabel.getChildren().add(0, b);
 			addLabel.getChildren().add(0, label);
 			addLabel.getChildren().add(0, exitButton);
-			
-			
-			bp.setTop(addLabel);
-			
+			addLabelS.getChildren().add(0, b);
+			addLabelS.getChildren().add(0, label);
+			addLabelS.getChildren().add(0, exitButton);
 			LibraryView = addMusicLables(controller.getLibrary(), LibraryView);
+			bp.setTop(addLabel);
+			bpS.setTop(addLabelS);
+			
+			
+			sp.setContent(LibraryView);
 			
 			Scene Library = new Scene(bp,windowWidth,windowHeight);
 			if(controller.getColorMode()) {
@@ -183,7 +202,29 @@ public class MusicPlayerGUI extends Application implements Observer{
 				Library.setFill(white);
 			}
 			
+			Scene LibrarySorted = new Scene(bpS,windowWidth,windowHeight);
+			if(controller.getColorMode()) {
+				LibrarySorted.getStylesheets().add(getClass().getResource("/Menu.css").toExternalForm());
+				LibrarySorted.setFill(black);
+			}else {
+				LibrarySorted.getStylesheets().add(getClass().getResource("/MenuDark.css").toExternalForm());
+				LibrarySorted.setFill(white);
+			}
+			b.setOnMouseClicked(f -> {
+				if (!controller.getIsSorted()) {
+					LibraryView = addMusicLables(controller.getSortedLibrary(), LibraryView);
+					controller.setIsSorted(true);
+					spS.setContent(LibraryView);
+					changeScene(LibrarySorted);
+				} else {
+					LibraryView = addMusicLables(controller.getLibrary(), LibraryView);
+					controller.setIsSorted(false);
+					sp.setContent(LibraryView);
+					changeScene(Library);
+				}
+			});
 			changeScene(Library);
+//			LibraryView = addMusicLables(controller.getLibrary(), LibraryView);
 		});
 		
 		MenuFavSongs.setOnAction(e -> {
@@ -243,12 +284,12 @@ public class MusicPlayerGUI extends Application implements Observer{
 			if(controller.getColorMode()) {
 				Equalizer.setFill(black);
 				Equalizer.getStylesheets().add(getClass().getResource("/Menu.css").toExternalForm());
-				label.setStyle("-fx-text-fill:WHITE; -fx-font-weight: bold;-fx-font-size: 25px;");
+				label.setStyle("-fx-text-fill:WHITE; -fx-font-weight: bold;");
 			}
 			else {
 				Equalizer.setFill(white);
 				Equalizer.getStylesheets().add(getClass().getResource("/MenuDark.css").toExternalForm());
-				label.setStyle("-fx-text-fill: BLACK; -fx-font-weight: bold;-fx-font-size: 25px;");
+				label.setStyle("-fx-text-fill: BLACK; -fx-font-weight: bold;");
 			}
 			
 			equalizer.getGridPane().add(exitButton, 0, 0);
@@ -381,6 +422,38 @@ public class MusicPlayerGUI extends Application implements Observer{
 	
 	// copy and change to treeset and change name too
 	private VBox addMusicLables(HashSet<String> hashSet, VBox musicLabled) {
+		System.out.println(hashSet.size());
+		Label temp[] = new Label[hashSet.size()];
+		int i = 0;
+		for(String songName: hashSet) {
+			temp[i] = new Label(songName);
+			temp[i].setId("lib-label");
+			if(controller.getColorMode()) {
+				temp[i].getStylesheets().add(getClass().getResource("/label.css").toExternalForm());
+				temp[i].setTextFill(white);
+			}
+			else {
+				temp[i].getStylesheets().add(getClass().getResource("/labelDark.css").toExternalForm());
+				temp[i].setTextFill(black);
+			}
+			
+			temp[i].setAlignment(Pos.CENTER);
+			temp[i].setMaxSize(windowWidth/2, windowHeight/10);
+			
+			temp[i].setOnMouseClicked(e -> {
+				controller.setCurrentIndex(controller.getSongIndex(songName));
+				changeScene(MainScene);
+				playButton.setFill(new ImagePattern(pause));
+				System.out.println(controller.getCurrentSong().getName());
+			});
+			musicLabled.getChildren().add(temp[i]);
+			i += 1;
+		}
+		musicLabled.setSpacing(10);
+		return musicLabled;
+	}
+	
+	private VBox addMusicLables(TreeSet<String> hashSet, VBox musicLabled) {
 		System.out.println(hashSet.size());
 		Label temp[] = new Label[hashSet.size()];
 		int i = 0;
