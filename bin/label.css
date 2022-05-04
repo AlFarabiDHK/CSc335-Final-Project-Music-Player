@@ -1,0 +1,12 @@
+.label {
+    -fx-background-color: black; 
+    -fx-border-color: white; 
+    -fx-border-width: 2px; 
+    -fx-padding: 20px;
+    -fx-border-radius: 10;
+}
+
+.label:hover {
+  -fx-background-color: rgba(81, 81, 81, 0.684);
+  -fx-margin: 10px;
+}

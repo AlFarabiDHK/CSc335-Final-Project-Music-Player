@@ -107,6 +107,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 	    artist.setTranslateY(windowHeight*3/5 + 3 * textOffset);
 	    artist.setMinWidth(windowWidth);
 	    artist.setAlignment(Pos.CENTER);
+	    artist.setTextFill(whiteColor);
 	    artist.setFont(new Font("Arial", 15));
 	    
 	    
@@ -115,6 +116,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 	    title.setTranslateY(windowHeight*3/5 + 0 * textOffset);
 	    title.setMinWidth(windowWidth);
 	    title.setAlignment(Pos.CENTER);
+	    title.setTextFill(whiteColor);
 	    title.setFont(new Font("Arial", 25));
 	    
 		MenuButton Menu = new MenuButton(" ");
@@ -122,7 +124,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 		MenuItem MenuEqualizer = new MenuItem("Equalizer");
 		MenuItem MenuFavSongs = new MenuItem("Favourite");
 		MenuItem MenuLibrary = new MenuItem("Music Library");
-		MenuItem MenuMode = new MenuItem("Dark mode: Off");
+		MenuItem MenuMode = new MenuItem("Light mode: Off");
 		Menu.getItems().add(MenuLibrary);
 		Menu.getItems().add(MenuEqualizer);
 		Menu.getItems().add(MenuFavSongs);
@@ -239,7 +241,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 		MenuMode.setOnAction(e->{
 			if(controller.getColorMode()) {
 				MainScene.setFill(white);
-				MenuMode.setText("Dark Mode On");
+				MenuMode.setText("Light Mode: On");
 				Menu.setGraphic(new ImageView(menuDark));
 				artist.setTextFill(black);
 				title.setTextFill(black);
@@ -247,7 +249,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 				exitButton.setFill(new ImagePattern(exitDark));
 			} else {
 				MainScene.setFill(black);
-				MenuMode.setText("Dark Mode Off");
+				MenuMode.setText("Light Mode: Off");
 				Menu.setGraphic(new ImageView(menu));
 				artist.setTextFill(white);
 				title.setTextFill(white);
@@ -413,11 +415,9 @@ public class MusicPlayerGUI extends Application implements Observer{
 	private void handleMetadata(String key, Object value) {;
 	    if (key.equals("artist")) {
 	      artist.setText(value.toString());
-	      artist.setTextFill(whiteColor);
 	      artist.setTextAlignment(TextAlignment.CENTER);
 	    } if (key.equals("title")) {
 	      title.setText(value.toString());
-	      title.setTextFill(whiteColor);
 	      title.setTextAlignment(TextAlignment.CENTER);
 	    }
 	    if (key.equals("image")) {
