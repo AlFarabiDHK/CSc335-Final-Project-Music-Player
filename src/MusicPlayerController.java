@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -71,7 +72,7 @@ public class MusicPlayerController {
 		return model.isFavsong(curSong);
 	}
 	
-	public TreeSet<String> getFavSongs() {
+	public HashSet<String> getFavSongs() {
 		return model.getFavSongs();
 	}
 	
@@ -79,8 +80,12 @@ public class MusicPlayerController {
 		return model.getCurrentSong();
 	}
 	
-	public TreeSet<String> getLibrary() {
+	public HashSet<String> getLibrary() {
 		return model.getLibrary();
+	}
+	
+	public TreeSet<String> getSortedLibrary() {
+		return model.getSortedLibrary();
 	}
 	
 	public boolean getIsPlaying() {

@@ -1,5 +1,5 @@
 * {
-    -fx-menu-color: #22b14d;
+    -fx-menu-color: #000;
     -fx-menu-color-highlighted: #455a64;
     -fx-menu-font-color: #FFFFFF;
     -fx-menu-font-color-highlighted: #22b14d;
@@ -8,7 +8,9 @@
 /* Menu Button */
 /* The menu button itself */    
 .menu-button {
-    -fx-background-color: -fx-menu-color;
+    -fx-scale-y: 1.2;
+    -fx-scale-x: 1.2;
+    -fx-background-color: rgba(0, 0, 0, 0);
 }
 
 /* MENU ITEM */
@@ -43,11 +45,15 @@
     -fx-background-color: -fx-menu-color; 
 }
 
-.label #lib-label{
-    -fx-background-color: black; 
-    -fx-border-color: white; 
-    -fx-border-width: 2px; 
-    -fx-padding: 20px;
-    -fx-border-radius: 10;
+.menu-button > .arrow-button {
+    -fx-padding: 0;
+}
+
+.menu-button > .arrow-button > .arrow {
+    -fx-padding: 0;
+}
+
+.menu-button .arrow {
+    -fx-background-color: transparent;
 }
 

@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Observable;
 import java.util.Observer;
@@ -120,7 +121,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 		
 		
 		MenuButton Menu = new MenuButton(" ");
-		Menu.setStyle("-fx-background-color: #22b14d;-fx-text-fill: black;");
+//		Menu.setStyle("-fx-background-color: #22b14d;-fx-text-fill: black;");
 		Menu.setGraphic(new ImageView(menu));
 		MenuItem MenuEqualizer = new MenuItem("Equalizer");
 		MenuItem MenuFavSongs = new MenuItem("Favourite");
@@ -345,11 +346,12 @@ public class MusicPlayerGUI extends Application implements Observer{
 		MainStage.show();
 	}
 	
-	private VBox addMusicLables(TreeSet<String> Library, VBox musicLabled) {
-		System.out.println(Library.size());
-		Label temp[] = new Label[Library.size()];
+	// copy and change to treeset and change name too
+	private VBox addMusicLables(HashSet<String> hashSet, VBox musicLabled) {
+		System.out.println(hashSet.size());
+		Label temp[] = new Label[hashSet.size()];
 		int i = 0;
-		for(String songName: Library) {
+		for(String songName: hashSet) {
 			temp[i] = new Label(songName);
 			temp[i].setId("lib-label");
 			temp[i].getStylesheets().add(getClass().getResource("/label.css").toExternalForm());
