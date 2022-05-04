@@ -149,13 +149,13 @@ public class MusicPlayerGUI extends Application implements Observer{
 				sp.setStyle("-fx-background: black;");
 				bp.setBackground(appBackground);
 				LibraryView.setBorder(new Border(new BorderStroke(black, BorderStrokeStyle.NONE, corner, BorderWidths.EMPTY)));
-				label.setStyle("-fx-text-fill:WHITE; -fx-font-weight: bold;");
+				label.setStyle("-fx-text-fill:WHITE; -fx-font-weight: bold;-fx-font-size: 20px;");
 			}else {
 				sp.getStylesheets().add(getClass().getResource("/MenuDark.css").toExternalForm());
 				sp.setStyle("-fx-background: white;");
 				bp.setBackground(appBackgroundWhite);
 				LibraryView.setBorder(new Border(new BorderStroke(white, BorderStrokeStyle.NONE, corner, BorderWidths.EMPTY)));
-				label.setStyle("-fx-text-fill: BLACK; -fx-font-weight: bold;");
+				label.setStyle("-fx-text-fill: BLACK; -fx-font-weight: bold;-fx-font-size: 20px;");
 			}
 			
 			LibraryView.setPadding(new Insets(20));
@@ -191,8 +191,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 			HBox addLabel = new HBox(330);
 			ScrollPane favScroll = new ScrollPane();
 			Label label = new Label("Favorite Songs");
-			
-			
+
 			VBox FavoriteView = new VBox();
 			if(controller.getColorMode()) {
 				gp.setBackground(appBackground);
@@ -200,7 +199,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 				favScroll.setStyle("-fx-background-color: black");
 				favScroll.setBorder(new Border(new BorderStroke(black, BorderStrokeStyle.NONE, corner, BorderWidths.EMPTY)));
 				favScroll.getStylesheets().add(getClass().getResource("/Menu.css").toExternalForm());
-				label.setStyle("-fx-text-fill:WHITE; -fx-font-weight: bold;");
+				label.setStyle("-fx-text-fill:WHITE; -fx-font-weight: bold; -fx-font-size: 20px;");
 			}
 			else {
 				gp.setBackground(appBackgroundWhite);
@@ -208,7 +207,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 				favScroll.setStyle("-fx-background-color: white");
 				favScroll.setBorder(new Border(new BorderStroke(white, BorderStrokeStyle.NONE, corner, BorderWidths.EMPTY)));
 				favScroll.getStylesheets().add(getClass().getResource("/MenuDark.css").toExternalForm());
-				label.setStyle("-fx-text-fill: BLACK; -fx-font-weight: bold;");
+				label.setStyle("-fx-text-fill: BLACK; -fx-font-weight: bold; -fx-font-size: 20px;");
 			}
 			gp.setCenter(favScroll);
 			FavoriteView.setPadding(new Insets(15));
@@ -244,12 +243,12 @@ public class MusicPlayerGUI extends Application implements Observer{
 			if(controller.getColorMode()) {
 				Equalizer.setFill(black);
 				Equalizer.getStylesheets().add(getClass().getResource("/Menu.css").toExternalForm());
-				label.setStyle("-fx-text-fill:WHITE; -fx-font-weight: bold;");
+				label.setStyle("-fx-text-fill:WHITE; -fx-font-weight: bold;-fx-font-size: 25px;");
 			}
 			else {
 				Equalizer.setFill(white);
 				Equalizer.getStylesheets().add(getClass().getResource("/MenuDark.css").toExternalForm());
-				label.setStyle("-fx-text-fill: BLACK; -fx-font-weight: bold;");
+				label.setStyle("-fx-text-fill: BLACK; -fx-font-weight: bold;-fx-font-size: 25px;");
 			}
 			
 			equalizer.getGridPane().add(exitButton, 0, 0);
