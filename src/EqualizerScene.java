@@ -14,7 +14,6 @@ import javafx.scene.media.MediaPlayer;
 public class EqualizerScene extends AbstractView
 {
 	private static GridPane grid;
-
 	public EqualizerScene(MusicPlayerController controller) 
 	{
 		super(controller);
@@ -59,7 +58,10 @@ public class EqualizerScene extends AbstractView
 			
 			Slider slide = createSlider(band, minimum, maximum);
 			final Label label = new Label(frequencyFormat(band.getCenterFrequency()));
-			label.setStyle("-fx-text-fill:WHITE;");
+			if(controller.getColorMode())
+				label.setStyle("-fx-text-fill:WHITE;");
+			else
+				label.setStyle("-fx-text-fill: BLACK;");
 			label.getStyleClass().addAll("mediaText", "eqLabel");
 			
 			GridPane.setHalignment(label, HPos.CENTER);
@@ -69,6 +71,10 @@ public class EqualizerScene extends AbstractView
 			grid.add(label, i, 1);
 			grid.add(slide, i, 2);
 		}
+	}
+	
+	public void setLabelStyle() {
+		
 	}
 
 	private String frequencyFormat(double centerFrequency) {

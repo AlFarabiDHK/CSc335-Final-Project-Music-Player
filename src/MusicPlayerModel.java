@@ -121,10 +121,6 @@ public class MusicPlayerModel extends Observable{
 			setChanged();
 			notifyObservers();
 		}
-//		if (loops != 0)
-//			audioPlayer.pause();
-//		else
-//			audioPlayer.play();
 		if (!isPlaylistOver) {
 			audioPlayer.play();
 		} else {
@@ -305,6 +301,8 @@ public class MusicPlayerModel extends Observable{
 	{
 		return audio.getDuration();
 	}
+	
+	
 	
 	
 }
