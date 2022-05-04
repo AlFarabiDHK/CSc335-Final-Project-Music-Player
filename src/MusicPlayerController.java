@@ -25,6 +25,7 @@ public class MusicPlayerController {
 	
 	private MusicPlayerModel model;
 	private boolean isPlaying;
+	private boolean isDark;
 	
 	private boolean loop;
 	
@@ -32,6 +33,7 @@ public class MusicPlayerController {
 	{
 		this.model = model;
 		isPlaying = false;
+		isDark = true;
 		loop = false;
 	}
 	
@@ -145,4 +147,12 @@ public class MusicPlayerController {
 	{
 		return model.getEqualizerBand();
 	}
+	
+	public void setColorMode(boolean bool) {
+		this.isDark = bool;
+	}
+	public boolean getColorMode() {
+		return isDark;
+	}
+	
 }

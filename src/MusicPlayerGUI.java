@@ -1,13 +1,9 @@
-import java.io.File;
+
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
+
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Set;
-import java.util.TreeSet;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -18,15 +14,11 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
 import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
@@ -34,26 +26,18 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
 import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -74,9 +58,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 	private ImageView albumCover;
 	private Slider progressBar;
 	private Rectangle progressRec;
-	private static Image defaultImage = new Image("/default-cover.jpg");
 	private AnchorPane root;
-	private VBox LibRoot;
 	private Circle playButton;
 	private Circle likeButton;
 	private Image pause;
@@ -85,9 +67,8 @@ public class MusicPlayerGUI extends Application implements Observer{
 	private Image exit;
 	private Scene MainScene;
 	private Stage MainStage;
-	
-	
-	private boolean isDarkMode = true;
+	private Color white;
+	private Color black;
 	
 	@Override
 	public void start(Stage MainStage) throws Exception {
@@ -97,93 +78,145 @@ public class MusicPlayerGUI extends Application implements Observer{
 		model.addObserver(this);
 		CornerRadii corner = new CornerRadii(0);
 		Background appBackground = new Background(
-				new BackgroundFill(Color.BLACK, corner, Insets.EMPTY));
+				new BackgroundFill(black, corner, Insets.EMPTY));
+		Background appBackgroundWhite = new Background(
+				new BackgroundFill(white, corner, Insets.EMPTY));
 		root = new AnchorPane();
 		root.setBackground(appBackground);
-		
-		
-		//deBar sidebar = new SideBar();
-		
-		
+		white = Color.WHITE;
+		black = Color.BLACK;
 		MainScene = new Scene(root,windowWidth,windowHeight);
-		MainScene.setFill(Color.BLACK);
+		MainScene.setFill(black);
 		MainScene.getStylesheets().add(getClass().getResource("/Menu.css").toExternalForm());
 		Image play = new Image("/PlayButton.png");
-//		Image pause = new Image("/PauseButton.png");
 		Image shuffle = new Image("/ShuffleButton.png");
 		Image next = new Image("/NextButton.png");
 		Image prev = new Image("/PreviousButton.png");
 		Image menu = new Image("/MenuButton.png");
+		Image menuDark = new Image("/MenuButtonDak.png");
+		Image exitDark = new Image("/ExitButtonDark.png");
 		like = new Image("/LikeButton.png");
 		liked = new Image("/LikedButton.png");
 		pause = new Image("/PauseButton.png");
 		exit = new Image("/ExitButton.png");
-		
-		
+		artist = new Label();
+		title = new Label();
+		artist.setId("artist");
+	    
+	    artist.setTranslateX(0);
+	    artist.setTranslateY(windowHeight*3/5 + 3 * textOffset);
+	    artist.setMinWidth(windowWidth);
+	    artist.setAlignment(Pos.CENTER);
+	    artist.setTextFill(whiteColor);
+	    artist.setFont(new Font("Arial", 15));
+	    
+	    
+	    title.setId("title");
+	    title.setTranslateX(0);
+	    title.setTranslateY(windowHeight*3/5 + 0 * textOffset);
+	    title.setMinWidth(windowWidth);
+	    title.setAlignment(Pos.CENTER);
+	    title.setTextFill(whiteColor);
+	    title.setFont(new Font("Arial", 25));
+	    
 		MenuButton Menu = new MenuButton(" ");
-//		Menu.setStyle("-fx-background-color: #22b14d;-fx-text-fill: black;");
 		Menu.setGraphic(new ImageView(menu));
 		MenuItem MenuEqualizer = new MenuItem("Equalizer");
 		MenuItem MenuFavSongs = new MenuItem("Favourite");
 		MenuItem MenuLibrary = new MenuItem("Music Library");
+		MenuItem MenuMode = new MenuItem("Light mode: Off");
 		Menu.getItems().add(MenuLibrary);
 		Menu.getItems().add(MenuEqualizer);
 		Menu.getItems().add(MenuFavSongs);
+		Menu.getItems().add(MenuMode);
 		Circle exitButton = new Circle(windowWidth, smallButtonRadius, smallButtonRadius/3);
 		exitButton.setFill(new ImagePattern(exit));
 		exitButton.setOnMouseClicked(e->{
 			changeScene(MainScene);
-//			MainStage.setScene(MainScene);
 		});
+		
 		
 		MenuLibrary.setOnAction(e -> {
 			BorderPane bp = new BorderPane();
 			ScrollPane Sp = new ScrollPane();
-			Sp.getStylesheets().add(getClass().getResource("/Menu.css").toExternalForm());
+			
 			VBox LibraryView = new VBox();
+			if(controller.getColorMode()) {
+				Sp.getStylesheets().add(getClass().getResource("/Menu.css").toExternalForm());
+				Sp.setStyle("-fx-background: black;");
+				bp.setBackground(appBackground);
+				LibraryView.setBorder(new Border(new BorderStroke(black, BorderStrokeStyle.NONE, corner, BorderWidths.EMPTY)));
+			}else {
+				Sp.getStylesheets().add(getClass().getResource("/MenuDark.css").toExternalForm());
+				Sp.setStyle("-fx-background: white;");
+				bp.setBackground(appBackgroundWhite);
+				LibraryView.setBorder(new Border(new BorderStroke(white, BorderStrokeStyle.NONE, corner, BorderWidths.EMPTY)));
+			}
+			
 			LibraryView.setPadding(new Insets(20));
-			//Sp.setTranslateX(windowWidth/4);
-			//Sp.setLayoutX(windowWidth/4);
 			bp.setCenter(Sp);
 			Sp.setContent(LibraryView);
-			Sp.setStyle("-fx-background: black;");
+			
 			Sp.setFitToWidth(true);
-//			Sp.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.NONE, corner, BorderWidths.EMPTY)));
-//			LibraryView.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.NONE, corner, BorderWidths.EMPTY)));
 			LibraryView.setBackground(appBackground);
 			LibraryView.setAlignment(Pos.CENTER);
-			bp.setBackground(appBackground);
+			
 			bp.setTop(exitButton);
-			LibraryView.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.NONE, corner, BorderWidths.EMPTY)));
+			
 			LibraryView = addMusicLables(controller.getLibrary(), LibraryView);
 			
 			Scene Library = new Scene(bp,windowWidth,windowHeight);
-			Library.getStylesheets().add(getClass().getResource("/Menu.css").toExternalForm());
-			Library.setFill(Color.BLACK);
+			if(controller.getColorMode()) {
+				Library.getStylesheets().add(getClass().getResource("/Menu.css").toExternalForm());
+				Library.setFill(black);
+			}else {
+				Library.getStylesheets().add(getClass().getResource("/MenuDark.css").toExternalForm());
+				Library.setFill(white);
+			}
+			
 			changeScene(Library);
-//			MainStage.setScene(Library);
 		});
 		
 		MenuFavSongs.setOnAction(e -> {
 			BorderPane gp = new BorderPane();
 			ScrollPane FavScroll = new ScrollPane();
-			FavScroll.getStylesheets().add(getClass().getResource("/Menu.css").toExternalForm());
-			gp.setCenter(FavScroll);
+			
+			
 			VBox FavoriteView = new VBox();
+			if(controller.getColorMode()) {
+				gp.setBackground(appBackground);
+				FavoriteView.setStyle("-fx-background-color: black");
+				FavScroll.setStyle("-fx-background-color: black");
+				FavScroll.setBorder(new Border(new BorderStroke(black, BorderStrokeStyle.NONE, corner, BorderWidths.EMPTY)));
+				FavScroll.getStylesheets().add(getClass().getResource("/Menu.css").toExternalForm());
+			}
+			else {
+				gp.setBackground(appBackgroundWhite);
+				FavoriteView.setStyle("-fx-background-color: white");
+				FavScroll.setStyle("-fx-background-color: white");
+				FavScroll.setBorder(new Border(new BorderStroke(white, BorderStrokeStyle.NONE, corner, BorderWidths.EMPTY)));
+				FavScroll.getStylesheets().add(getClass().getResource("/MenuDark.css").toExternalForm());
+			}
+			gp.setCenter(FavScroll);
 			FavoriteView.setPadding(new Insets(15));
 			FavScroll.setContent(FavoriteView);
-			FavScroll.setStyle("-fx-background: black;");
+			
 			FavScroll.setFitToWidth(true);
 			FavoriteView.setAlignment(Pos.CENTER);
-			FavScroll.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.NONE, corner, BorderWidths.EMPTY)));
-			gp.setBackground(appBackground);
+			
+			
 			gp.setTop(exitButton);
 			FavoriteView = addMusicLables(controller.getFavSongs(), FavoriteView);
 			Scene Favorites = new Scene(gp,windowWidth,windowHeight);
-			Favorites.getStylesheets().add(getClass().getResource("/Menu.css").toExternalForm());
-			Favorites.setFill(Color.BLACK);
+			if(controller.getColorMode()) {
+				Favorites.setFill(black);
+				Favorites.getStylesheets().add(getClass().getResource("/Menu.css").toExternalForm());
+			}
+			else {
+				Favorites.setFill(white);
+				Favorites.getStylesheets().add(getClass().getResource("/MenuDark.css").toExternalForm());
+			}
 			changeScene(Favorites);
-//			MainStage.setScene(Favorites);
 		});
 		
 		MenuEqualizer.setOnAction(e -> {
@@ -192,38 +225,43 @@ public class MusicPlayerGUI extends Application implements Observer{
 			equalizer.getGridPane().setBackground(appBackground);
 			
 			Scene Equalizer = new Scene(equalizer.getGridPane(),windowWidth,windowHeight);
+			if(controller.getColorMode()) {
+				Equalizer.setFill(black);
+				Equalizer.getStylesheets().add(getClass().getResource("/Menu.css").toExternalForm());
+			}
+			else {
+				Equalizer.setFill(white);
+				Equalizer.getStylesheets().add(getClass().getResource("/MenuDark.css").toExternalForm());
+			}
 			
-			Equalizer.setFill(Color.BLACK);
-			Equalizer.getStylesheets().add(getClass().getResource("/Menu.css").toExternalForm());
 			changeScene(Equalizer);
-//			MainStage.setScene(Equalizer);
+
 		});
 		
-		//controller.playSong();
-		createMeta(controller.fetchMetadata(controller.getCurrentSong()));
-//		ObservableMap<String, Object> metadata1 = controller.fetchMetadata(controller.getCurrentSong());
-//		for(String key: metadata1.keySet())
-//		{
-//			System.out.println(key + ":"+ metadata1.get(key));
-//			handleMetadata(key, metadata1.get(key));
-//		}
-		
-		
-		
+		MenuMode.setOnAction(e->{
+			if(controller.getColorMode()) {
+				MainScene.setFill(white);
+				MenuMode.setText("Light Mode: On");
+				Menu.setGraphic(new ImageView(menuDark));
+				artist.setTextFill(black);
+				title.setTextFill(black);
+				controller.setColorMode(false);
+				exitButton.setFill(new ImagePattern(exitDark));
+			} else {
+				MainScene.setFill(black);
+				MenuMode.setText("Light Mode: Off");
+				Menu.setGraphic(new ImageView(menu));
+				artist.setTextFill(white);
+				title.setTextFill(white);
+				controller.setColorMode(true);
+				exitButton.setFill(new ImagePattern(exit));
+			}
+		});
+
+		createMeta(controller.fetchMetadata(controller.getCurrentSong()));	
 		playButton = new Circle(windowWidth/2, windowHeight * 5/6 + 2 * textOffset, playButtonRadius);
 		playButton.setFill(new ImagePattern(play));
 		playButton.setOnMouseClicked( e ->{
-			
-//			ObservableMap<String, Object> metadata = controller.fetchMetadata(controller.getCurrentSong());
-//			System.out.println(metadata.keySet());
-//			for(String key: metadata.keySet())
-//			{
-//				System.out.println(key + ":"+ metadata.get(key));
-//				handleMetadata(key, metadata.get(key));
-//			}
-			
-			
-			
 			if(!controller.getIsPlaying()) {
 				controller.playSong();
 				playButton.setFill(new ImagePattern(pause));
@@ -246,7 +284,6 @@ public class MusicPlayerGUI extends Application implements Observer{
 		previousButton.setFill(new ImagePattern(prev));
 		previousButton.setOnMouseClicked( e ->{
 			controller.previousSong();
-//			createMeta(controller.fetchMetadata(controller.getCurrentSong()));
 			playButton.setFill(new ImagePattern(pause));
 		});
 		
@@ -277,15 +314,6 @@ public class MusicPlayerGUI extends Application implements Observer{
 			createMeta(controller.fetchMetadata(controller.getCurrentSong()));
 			playButton.setFill(new ImagePattern(pause));
 			
-//			ObservableMap<String, Object> metadata = controller.fetchMetadata(controller.getCurrentSong());
-//			System.out.println(metadata.keySet());
-//			for(String key: metadata.keySet())
-//			{
-//				System.out.println(key + ":"+ metadata.get(key));
-//				handleMetadata(key, metadata.get(key));
-//			}
-//			System.out.println(controller.getCurrentSong().getName());
-//			
 		});
 		
 		//Temporary objects to view metadata.
@@ -293,26 +321,11 @@ public class MusicPlayerGUI extends Application implements Observer{
 		// Recommended magnifying glass.
 		
 		
-		artist = new Label();
-	    artist.setId("artist");
-	    
-	    artist.setTranslateX(0);
-	    artist.setTranslateY(windowHeight*3/5 + 3 * textOffset);
-	    artist.setMinWidth(windowWidth);
-	    artist.setAlignment(Pos.CENTER);
-	    artist.setFont(new Font("Arial", 15));
-	    
-	    title = new Label();
-	    title.setId("title");
-	    title.setTranslateX(0);
-	    title.setTranslateY(windowHeight*3/5 + 0 * textOffset);
-	    title.setMinWidth(windowWidth);
-	    title.setAlignment(Pos.CENTER);
-	    title.setFont(new Font("Arial", 25));
+		
 	    
 	   
 	    // Need a default image
-	    albumCover = new ImageView(defaultImage);
+	    albumCover = new ImageView();
 	    albumCover.setFitHeight(albumCoverDim);
 	    albumCover.setFitWidth(albumCoverDim);
 	    albumCover.setX(windowWidth * 0.3125);
@@ -327,13 +340,13 @@ public class MusicPlayerGUI extends Application implements Observer{
 
 		progressRec = new Rectangle();
 		progressRec.setStyle("-fx-fill: linear-gradient(to right, #006400 0%, rgba(164, 164, 164, 0.8) 0%);");
+		root.getStylesheets().add(this.getClass().getResource("/root.css").toExternalForm());
 	    progressBarController();
 	    root.getChildren().add(progressRec);
 		root.getChildren().add(title);
 		root.getChildren().add(artist);
 		root.getChildren().add(albumCover);
 		root.getChildren().add(progressBar);
-		
 		root.getChildren().add(playButton);
 		root.getChildren().add(likeButton);
 		root.getChildren().add(shuffleButton);
@@ -354,17 +367,21 @@ public class MusicPlayerGUI extends Application implements Observer{
 		for(String songName: hashSet) {
 			temp[i] = new Label(songName);
 			temp[i].setId("lib-label");
-			temp[i].getStylesheets().add(getClass().getResource("/label.css").toExternalForm());
+			if(controller.getColorMode()) {
+				temp[i].getStylesheets().add(getClass().getResource("/label.css").toExternalForm());
+				temp[i].setTextFill(white);
+			}
+			else {
+				temp[i].getStylesheets().add(getClass().getResource("/labelDark.css").toExternalForm());
+				temp[i].setTextFill(black);
+			}
+			
 			temp[i].setAlignment(Pos.CENTER);
 			temp[i].setMaxSize(windowWidth/2, windowHeight/10);
-//			temp[i].setStyle("-fx-background-color: black; -fx-border-color: white; "
-//					+ "-fx-border-width: 2px; -fx-padding: 20px;"
-//					+ "-fx-border-radius: 10;");
-			temp[i].setTextFill(Color.WHITE);
+			
 			temp[i].setOnMouseClicked(e -> {
 				controller.setCurrentIndex(controller.getSongIndex(songName));
 				changeScene(MainScene);
-//				MainStage.setScene(MainScene);
 				playButton.setFill(new ImagePattern(pause));
 				System.out.println(controller.getCurrentSong().getName());
 			});
@@ -398,11 +415,9 @@ public class MusicPlayerGUI extends Application implements Observer{
 	private void handleMetadata(String key, Object value) {;
 	    if (key.equals("artist")) {
 	      artist.setText(value.toString());
-	      artist.setTextFill(whiteColor);
 	      artist.setTextAlignment(TextAlignment.CENTER);
 	    } if (key.equals("title")) {
 	      title.setText(value.toString());
-	      title.setTextFill(whiteColor);
 	      title.setTextAlignment(TextAlignment.CENTER);
 	    }
 	    if (key.equals("image")) {
@@ -416,16 +431,12 @@ public class MusicPlayerGUI extends Application implements Observer{
 	
 	private void progressBarController() 
 	{
-		root.getStylesheets().add(this.getClass().getResource("/root.css").toExternalForm());
+		
 		progressRec.heightProperty().bind(progressBar.heightProperty());
-//		progressRec.setHeight(2);
-//        progressRec.widthProperty().bind(progressBar.widthProperty());
 		progressRec.translateXProperty().bind(progressBar.translateXProperty());
 		progressRec.translateYProperty().bind(progressBar.translateYProperty());
-        //progressRec.setTranslateX(textOffset);
-	    //progressRec.setTranslateY(windowHeight*3/5 + 5 * textOffset);
 	    progressRec.setWidth(windowWidth - 2 * textOffset);
-        progressRec.setFill(Color.BLACK);
+        progressRec.setFill(black);
         progressRec.setArcHeight(15);
         progressRec.setArcWidth(15);
         
