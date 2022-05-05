@@ -72,12 +72,9 @@ public class EqualizerScene extends AbstractView
 			grid.add(slide, i, 2);
 		}
 	}
-	
-	public void setLabelStyle() {
-		
-	}
 
-	private String frequencyFormat(double centerFrequency) {
+	private String frequencyFormat(double centerFrequency) 
+	{
 		if (centerFrequency < 1000)
 		{
 			return String.format("%.0f Hz", centerFrequency);
@@ -85,7 +82,8 @@ public class EqualizerScene extends AbstractView
 		return String.format("%.1f KHz", centerFrequency/1000);
 	}
 
-	private Slider createSlider(EqualizerBand band, double minimum, double maximum) {
+	private Slider createSlider(EqualizerBand band, double minimum, double maximum) 
+	{
 		final Slider slide = new Slider(minimum, maximum, band.getGain());
 		slide.getStyleClass().add("-fx-background-radius: 5; -fx-background-color: #222, #888, black;"
 				+ "-fx-background-insets: 0, 1 0 0 1, 1; -fx-padding: 2 10;");
