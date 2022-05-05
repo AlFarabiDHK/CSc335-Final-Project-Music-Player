@@ -52,6 +52,7 @@ public class MusicPlayerModel extends Observable
 	 * This is the constructor for the model. It initializes the model, the audio files arraylist,
 	 * initial audio, audioplayer, the first metadata and also creates the favorites.txt
 	 * if it doesn't exist already.
+	 * @throws IOException happens when the user input in wrong
 	 * 
 	 */
 	
@@ -69,7 +70,6 @@ public class MusicPlayerModel extends Observable
 			for (int i = 0; i < musicFiles.length; i++) 
 			{
 				allSongs.add(musicFiles[i]);
-				System.out.println(musicFiles[i]);
 			}
 		}
 		
@@ -154,7 +154,6 @@ public class MusicPlayerModel extends Observable
 	 */
 	public void playSong() 
 	{
-		System.out.println(isNext);
 		
 		if (isNext) 
 		{
@@ -284,6 +283,7 @@ public class MusicPlayerModel extends Observable
 	 * @param name is a string with the name of the song to be added to our favorites
 	 * 
 	 * @return true if the favorite is added and false if the favorite is not added.
+	 * @throws IOException happens when the user input in wrong
 	 *
 	 */
 	public boolean addFavSong(String name) throws IOException 
@@ -296,7 +296,6 @@ public class MusicPlayerModel extends Observable
 			      FileWriter favWriter = new FileWriter("favorites.txt", true);
 			      favWriter.write(name + "\n");
 			      favWriter.close();
-			      System.out.println("Successfully wrote to the file.");
 			} 
 			
 			catch (IOException e) 
@@ -304,7 +303,6 @@ public class MusicPlayerModel extends Observable
 			      System.out.println("An error occurred.");
 			      e.printStackTrace();
 			}
-			System.out.println(favSongs.toString());
 			return true;
 		}
 		
@@ -312,7 +310,6 @@ public class MusicPlayerModel extends Observable
 		{
 			removeFavSong(name);
 			removeFavSongsFromFile(name);
-			System.out.println(favSongs.toString());
 			return false;
 		}
 	}
@@ -327,6 +324,7 @@ public class MusicPlayerModel extends Observable
 	 * temporary file.
 	 * 
 	 * @param name is a string with the name of the song to be removed to our favorites
+	 * @throws IOException happens when the user input in wrong
 	 *
 	 */
 	public void removeFavSongsFromFile(String name) throws IOException 
@@ -593,7 +591,6 @@ public class MusicPlayerModel extends Observable
 		i++;
 		}
 		
-		System.out.println("Got till here");
 		return i;
 	}
 	

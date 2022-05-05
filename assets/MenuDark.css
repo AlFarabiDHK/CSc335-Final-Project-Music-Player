@@ -1,7 +1,7 @@
 * {
-    -fx-menu-color: #FFFFFF;
+    -fx-menu-color: #000;
     -fx-menu-color-highlighted: #455a64;
-    -fx-menu-font-color: #000000;
+    -fx-menu-font-color: #FFFFFF;
     -fx-menu-font-color-highlighted: #22b14d;
 }
 
@@ -57,3 +57,27 @@
     -fx-background-color: transparent;
 }
 
+.button {
+    -fx-background-color: -fx-menu-color;
+    -fx-text-fill: -fx-menu-font-color-highlighted;
+    -fx-border-color: rgb(255, 255, 255); 
+    -fx-border-width: 1px;
+    -fx-border-radius: 2;
+}
+
+.button:hover {
+    -fx-background-color: -fx-menu-color-highlighted;
+}
+
+.scroll-pane {
+    -fx-background-insets: 0;
+    -fx-padding: 0;
+}
+
+.scroll-pane:focused {
+    -fx-background-insets: 0;
+}
+
+.scroll-pane .corner {
+    -fx-background-insets: 0;
+}

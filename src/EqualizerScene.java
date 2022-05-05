@@ -11,14 +11,41 @@ import javafx.scene.layout.RowConstraints;
 import javafx.scene.media.EqualizerBand;
 import javafx.scene.media.MediaPlayer;
 
+/**
+ * 
+ * @author Dhruv Bhatia, Muhtasim Al-Farabi, Shrey Goyal, Suryashree Ray
+ * 
+ * This class can changes the frequencies of our music app by increasing or decreasing the frequency.
+ * It inherits the abstract class AbstructView. 
+ */
 public class EqualizerScene extends AbstractView
 {
 	private static GridPane grid;
+	
+	/**
+	 * Constructor
+	 * 
+	 * <p>
+	 * 
+	 * This is the constructor of the equalizerScene class. It calls the constructor of the super class
+	 * and passes in the controller.
+	 * @param controller an instantiation of the MusicPlayerController class 
+	 */
 	public EqualizerScene(MusicPlayerController controller) 
 	{
 		super(controller);
 		createEqualizer();
 	}
+	
+	/**
+	 * 
+	 * Returns the initial Node
+	 * 
+	 * <p>
+	 * 
+	 * This method returns a gridPane that will contain the equalizer sliders.
+	 * @return a Node that is the initial equalizer view
+	 */
 
 	@Override
 	protected Node initView() 
@@ -35,19 +62,35 @@ public class EqualizerScene extends AbstractView
 		return grid;
 	}
 	
+	/**
+	 * Creates the equalizers
+	 * 
+	 * <p>
+	 * 
+	 * This method calls the createBands method in order to create the sliders
+	 */
+	
 	private void createEqualizer() 
 	{
 		grid = (GridPane) getViewNode();
-		final MediaPlayer audioPlayer = controller.getAudioPlayer();
+
 		
 		createBands(grid);
 	}
+	
+	/**
+	 * Creates the equalizer sliders
+	 * 
+	 * <p>
+	 * 
+	 * This method creates the sliders and adds them to the gridpane
+	 */
 
 	private void createBands(GridPane grid) 
 	{
 		final ObservableList<EqualizerBand> bands = controller.getEqualizerBand();
 		
-		//bands.clear();
+
 		
 		double minimum = EqualizerBand.MIN_GAIN;
 		double maximum = EqualizerBand.MAX_GAIN;
@@ -73,6 +116,16 @@ public class EqualizerScene extends AbstractView
 		}
 	}
 
+	/**
+	 * returns the frequency format
+	 * 
+	 * <p>
+	 * 
+	 * This method returns the frequency format either in Hz or KHz
+	 * @param centerFrequency the actual frequency
+	 * @return the frequency format either in Hz or KHz
+	 */
+
 	private String frequencyFormat(double centerFrequency) 
 	{
 		if (centerFrequency < 1000)
@@ -81,6 +134,20 @@ public class EqualizerScene extends AbstractView
 		}
 		return String.format("%.1f KHz", centerFrequency/1000);
 	}
+	
+	/**
+	 * 
+	 * Creates Sliders
+	 * 
+	 * <p>
+	 * 
+	 * This method creates sliders for the equalizer grid pane
+	 * 
+	 * @param band an EqualizerBand object 
+	 * @param minimum a double, indicates the minimum of a slider
+	 * @param maximuma double, indicates the maximum of a slider
+	 * @return a slider
+	 */
 
 	private Slider createSlider(EqualizerBand band, double minimum, double maximum) 
 	{
@@ -93,6 +160,15 @@ public class EqualizerScene extends AbstractView
 		slide.setPrefWidth(44);
 		return slide;
 	}
+	
+	/**
+	 * gets the GridPane
+	 * 
+	 * <p>
+	 * 
+	 * This method returns the GridPane on which every slider exists
+	 * @return the grid field
+	 */
 	
 	public GridPane getGridPane()
 	{

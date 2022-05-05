@@ -7,6 +7,6 @@
 }
 
 .label:hover {
-  -fx-background-color: rgba(81, 81, 81, 0.75);
+  -fx-background-color: #b4b4b4;
   -fx-margin: 10px;
 }
