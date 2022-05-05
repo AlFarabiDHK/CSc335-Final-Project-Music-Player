@@ -247,6 +247,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 			sp.setContent(LibraryView);
 			
 			sp.setFitToWidth(true);
+			sp.setFitToHeight(true);
 			LibraryView.setBackground(appBackground);
 			LibraryView.setAlignment(Pos.CENTER);
 			
@@ -286,6 +287,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 
 			spSorted.setContent(LibraryViewSorted);			
 			spSorted.setFitToWidth(true);
+			spSorted.setFitToHeight(true);
 			LibraryViewSorted.setBackground(appBackground);
 			LibraryViewSorted.setAlignment(Pos.CENTER);
 
@@ -330,8 +332,8 @@ public class MusicPlayerGUI extends Application implements Observer{
 			gp.setCenter(favScroll);
 			FavoriteView.setPadding(new Insets(15));
 			favScroll.setContent(FavoriteView);
-			
 			favScroll.setFitToWidth(true);
+			favScroll.setFitToHeight(true);
 			FavoriteView.setAlignment(Pos.CENTER);
 			
 			addLabel.getChildren().add(0, label);
