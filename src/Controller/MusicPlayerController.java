@@ -35,10 +35,7 @@ public class MusicPlayerController
 	 * 
 	 * This is the constructor for the controller. It initializes the model, isPlaying and
 	 * isDark
-<<<<<<< HEAD
-=======
 	 * @param model the model of the Music Player
->>>>>>> 534bff00e3536b2753909552c518ba6846d43874
 	 * 
 	 */
 	public MusicPlayerController(MusicPlayerModel model) 
@@ -106,10 +103,7 @@ public class MusicPlayerController
 	 * @param name is a string with the name of the song to be added to our favorites
 	 * 
 	 * @return true if the favorite is added and false if the favorite is not added.
-<<<<<<< HEAD
-=======
 	 * @throws IOException happens when the user input in wrong
->>>>>>> 534bff00e3536b2753909552c518ba6846d43874
 	 *
 	 */
 	public boolean addFavSong(String name) throws IOException 
@@ -159,10 +153,6 @@ public class MusicPlayerController
 	 * This function helps to see if a current song is
 	 * a favorite or not
 	 * 
-<<<<<<< HEAD
-	 * @param curSong is a file that is the current song playing.
-=======
->>>>>>> 534bff00e3536b2753909552c518ba6846d43874
 	 * 
 	 * @return favorite songs which is a hashset.
 	 *
@@ -354,11 +344,7 @@ public class MusicPlayerController
 	 * This function helps to set the audioplayer time
 	 * to the duration that is sent by the slider
 	 * 
-<<<<<<< HEAD
-	 * @param duration is a double with the duration to set out time
-=======
 	 * @param d is a double with the duration to set out time
->>>>>>> 534bff00e3536b2753909552c518ba6846d43874
 	 *
 	 */
 	public void setAudioPlayerTime(double d) 

@@ -392,8 +392,6 @@ public class MusicPlayerModel extends Observable
 	 * This function helps to see if a current song is
 	 * a favorite or not
 	 * 
-	 * @param curSong is a file that is the current song playing.
-	 * 
 	 * @return favorite songs which is a hashset.
 	 *
 	 */
