@@ -41,6 +41,7 @@ public class MusicPlayerController
 	 * 
 	 * This is the constructor for the controller. It initializes the model, isPlaying and
 	 * isDark
+	 * @param model the model of the Music Player
 	 * 
 	 */
 	public MusicPlayerController(MusicPlayerModel model) 
@@ -106,6 +107,7 @@ public class MusicPlayerController
 	 * @param name is a string with the name of the song to be added to our favorites
 	 * 
 	 * @return true if the favorite is added and false if the favorite is not added.
+	 * @throws IOException happens when the user input in wrong
 	 *
 	 */
 	public boolean addFavSong(String name) throws IOException 
@@ -155,7 +157,6 @@ public class MusicPlayerController
 	 * This function helps to see if a current song is
 	 * a favorite or not
 	 * 
-	 * @param curSong is a file that is the current song playing.
 	 * 
 	 * @return favorite songs which is a hashset.
 	 *
@@ -347,7 +348,7 @@ public class MusicPlayerController
 	 * This function helps to set the audioplayer time
 	 * to the duration that is sent by the slider
 	 * 
-	 * @param duration is a double with the duration to set out time
+	 * @param d is a double with the duration to set out time
 	 *
 	 */
 	public void setAudioPlayerTime(double d) 
@@ -435,9 +436,28 @@ public class MusicPlayerController
 		return isDark;
 	}
 	
+	/**
+	 * Gets if library is sorted
+	 * 
+	 * <p>
+	 * 
+	 * This function helps to get the boolean isSorted
+	 * 
+	 * @return the boolean isSorted
+	 */
+	
 	public boolean getIsSorted() {
 		return isSorted;
 	}
+	
+	/**
+	 * Sets the isSorted field
+	 * 
+	 * <p>
+	 * 
+	 * This method sets the isSorted field
+	 * @param b a boolean which indicates the sort status of the library
+	 */
 	public void setIsSorted(boolean b) {
 		isSorted = b;
 	}

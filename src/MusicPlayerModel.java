@@ -52,6 +52,7 @@ public class MusicPlayerModel extends Observable
 	 * This is the constructor for the model. It initializes the model, the audio files arraylist,
 	 * initial audio, audioplayer, the first metadata and also creates the favorites.txt
 	 * if it doesn't exist already.
+	 * @throws IOException happens when the user input in wrong
 	 * 
 	 */
 	
@@ -284,6 +285,7 @@ public class MusicPlayerModel extends Observable
 	 * @param name is a string with the name of the song to be added to our favorites
 	 * 
 	 * @return true if the favorite is added and false if the favorite is not added.
+	 * @throws IOException happens when the user input in wrong
 	 *
 	 */
 	public boolean addFavSong(String name) throws IOException 
@@ -327,6 +329,7 @@ public class MusicPlayerModel extends Observable
 	 * temporary file.
 	 * 
 	 * @param name is a string with the name of the song to be removed to our favorites
+	 * @throws IOException happens when the user input in wrong
 	 *
 	 */
 	public void removeFavSongsFromFile(String name) throws IOException 
@@ -393,7 +396,6 @@ public class MusicPlayerModel extends Observable
 	 * This function helps to see if a current song is
 	 * a favorite or not
 	 * 
-	 * @param curSong is a file that is the current song playing.
 	 * 
 	 * @return favorite songs which is a hashset.
 	 *

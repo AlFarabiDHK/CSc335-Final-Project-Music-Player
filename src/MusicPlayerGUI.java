@@ -85,8 +85,21 @@ public class MusicPlayerGUI extends Application implements Observer{
 	private Color white;
 	private Color black;
 	
+	
+	
+	/**
+	 * Starts the scene
+	 * 
+	 * <p>
+	 * 
+	 * This method initializes everything that needs to be shown on the scene. It has most of the functionalities that
+	 * is required to run the music player. The in-line comments describes the purpose of each block of code. 
+	 * @param MainStage a stage on which the scenes will be placed.
+	 */
+	
 	@Override
 	public void start(Stage MainStage) throws Exception {
+		// initializing most global variables
 		this.MainStage = MainStage;
 		model = new MusicPlayerModel();
 		controller = new MusicPlayerController(model);
@@ -103,6 +116,8 @@ public class MusicPlayerGUI extends Application implements Observer{
 		MainScene = new Scene(root,windowWidth,windowHeight);
 		MainScene.setFill(black);
 		MainScene.getStylesheets().add(getClass().getResource("/MenuDark.css").toExternalForm());
+		
+		// loading up all assets 
 		Image play = new Image("/PlayButton.png");
 		Image shuffle = new Image("/ShuffleButton.png");
 		Image next = new Image("/NextButton.png");
@@ -116,8 +131,9 @@ public class MusicPlayerGUI extends Application implements Observer{
 		exit = new Image("/ExitButton.png");
 		artist = new Label();
 		title = new Label();
+		
+		// setting up all artist properties
 		artist.setId("artist");
-	    
 	    artist.setTranslateX(0);
 	    artist.setTranslateY(windowHeight*3/5 + 3 * textOffset);
 	    artist.setMinWidth(windowWidth);
@@ -125,6 +141,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 	    artist.setTextFill(whiteColor);
 	    artist.setFont(new Font("Arial", 15));
 	    
+	    // setting up all title properties
 	    
 	    title.setId("title");
 	    title.setTranslateX(0);
@@ -133,6 +150,8 @@ public class MusicPlayerGUI extends Application implements Observer{
 	    title.setAlignment(Pos.CENTER);
 	    title.setTextFill(whiteColor);
 	    title.setFont(new Font("Arial", 25));
+	    
+	    // Menu functionality
 	    
 		MenuButton Menu = new MenuButton(" ");
 		Menu.setGraphic(new ImageView(menu));
@@ -144,15 +163,19 @@ public class MusicPlayerGUI extends Application implements Observer{
 		Menu.getItems().add(MenuEqualizer);
 		Menu.getItems().add(MenuFavSongs);
 		Menu.getItems().add(MenuMode);
+		
+		// styling exit button
 		Circle exitButton = new Circle(windowWidth, smallButtonRadius, smallButtonRadius/3);
 		exitButton.setFill(new ImagePattern(exit));
 		exitButton.setScaleX(1.4);
 		exitButton.setScaleY(1.4);
+		
+		// changes the scene when the button is clicked
 		exitButton.setOnMouseClicked(e->{
 			changeScene(MainScene);
 		});
 		
-		
+		// generates everything for the main library
 		MenuLibrary.setOnAction(e -> {
 			BorderPane bp = new BorderPane();
 			HBox addLabel = new HBox(330);
@@ -161,6 +184,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 			VBox LibraryView = new VBox();
 			
 			LibraryView = addMusicLables(controller.getLibrary(), LibraryView);
+			
 			if(controller.getColorMode()) {
 				sp.setStyle("-fx-background: black;");
 				LibraryView.setStyle("-fx-background: black;");
@@ -238,6 +262,8 @@ public class MusicPlayerGUI extends Application implements Observer{
 			});
 		});
 		
+		// generates everything for the fav song library 
+		
 		MenuFavSongs.setOnAction(e -> {
 			BorderPane gp = new BorderPane();
 			HBox addLabel = new HBox(332);
@@ -284,7 +310,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 			}
 			changeScene(Favorites);
 		});
-		
+		// generates everything for the equalizer
 		MenuEqualizer.setOnAction(e -> {
 			EqualizerScene equalizer = new EqualizerScene(controller);
 			HBox addLabel = new HBox(330);
@@ -309,7 +335,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 			changeScene(Equalizer);
 
 		});
-		
+		// switches between dark and light mode
 		MenuMode.setOnAction(e->{
 			if(controller.getColorMode()) {
 				MainScene.setFill(white);
@@ -333,6 +359,8 @@ public class MusicPlayerGUI extends Application implements Observer{
 		createMeta(controller.fetchMetadata(controller.getCurrentSong()));	
 		playButton = new Circle(windowWidth/2, windowHeight * 5/6 + 2 * textOffset, playButtonRadius);
 		playButton.setFill(new ImagePattern(play));
+		
+		// event handler for the play button
 		playButton.setOnMouseClicked( e ->{
 			if(!controller.getIsPlaying()) {
 				controller.playSong();
@@ -347,6 +375,8 @@ public class MusicPlayerGUI extends Application implements Observer{
 		
 		Circle nextButton = new Circle(windowWidth * 0.6875, windowHeight * 5/6 + 2 * textOffset, smallButtonRadius);
 		nextButton.setFill(new ImagePattern(next));
+		
+		// event handler for the play button
 		nextButton.setOnMouseClicked( e ->{
 			controller.nextSong();
 			playButton.setFill(new ImagePattern(pause));
@@ -354,6 +384,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 		
 		Circle previousButton = new Circle(windowWidth * 0.3125, windowHeight * 5/6 + 2 * textOffset, smallButtonRadius);
 		previousButton.setFill(new ImagePattern(prev));
+		// event handler for the previous button
 		previousButton.setOnMouseClicked( e ->{
 			controller.previousSong();
 			playButton.setFill(new ImagePattern(pause));
@@ -365,7 +396,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 		} else {
 			likeButton.setFill(new ImagePattern(like));
 		}
-		
+		// event handler for the like button
 		likeButton.setOnMouseClicked(e -> {
 			try {
 				if (controller.addFavSong(controller.getCurrentSong().getName())) {
@@ -374,13 +405,13 @@ public class MusicPlayerGUI extends Application implements Observer{
 					likeButton.setFill(new ImagePattern(like));
 				}
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		});
 		
 		Circle shuffleButton = new Circle(windowWidth * 1/8, windowHeight * 5/6 + 2 * textOffset, smallButtonRadius);
 		shuffleButton.setFill(new ImagePattern(shuffle));
+		// event handler for the shuffle button
 		shuffleButton.setOnMouseClicked(e -> {
 			controller.shuffleSongs();
 			createMeta(controller.fetchMetadata(controller.getCurrentSong()));
@@ -388,21 +419,14 @@ public class MusicPlayerGUI extends Application implements Observer{
 			
 		});
 		
-		//Temporary objects to view metadata.
-		// Barely visible in black background.
-		// Recommended magnifying glass.
+		// setting up all album cover properties
 		
-		
-		
-	    
-	   
-	    // Need a default image
 	    albumCover = new ImageView();
 	    albumCover.setFitHeight(albumCoverDim);
 	    albumCover.setFitWidth(albumCoverDim);
 	    albumCover.setX(windowWidth * 0.3125);
 	    albumCover.setY(windowHeight * 1/12);
-	    
+		// setting up all progress bar properties
 	    progressBar = new Slider(0, 250, 0);
 	    progressBar.setTranslateX(textOffset);
 	    progressBar.setTranslateY(windowHeight*3/5 + 5 * textOffset);
@@ -414,6 +438,8 @@ public class MusicPlayerGUI extends Application implements Observer{
 		progressRec.setStyle("-fx-fill: linear-gradient(to right, #006400 0%, rgba(164, 164, 164, 0.8) 0%);");
 		root.getStylesheets().add(this.getClass().getResource("/root.css").toExternalForm());
 	    progressBarController();
+	    
+	    // adding everything to the root
 	    root.getChildren().add(progressRec);
 		root.getChildren().add(title);
 		root.getChildren().add(artist);
@@ -431,7 +457,17 @@ public class MusicPlayerGUI extends Application implements Observer{
 		MainStage.show();
 	}
 	
-	// copy and change to treeset and change name too
+	/**
+	 * Adds unsorted musicLabel to a VBox
+	 * 
+	 * <p>
+	 * 
+	 * This method takes a set that contains music title information. Then it loops though the set and
+	 * adds each song name to the VBox
+	 * @param hashSet a TreeSet of Strings that is unsorted and contains the song names
+	 * @param musicLabled a VBox to be modified
+	 * @return the VBox that was inputed will be modified and returned
+	 */
 	private VBox addMusicLables(HashSet<String> hashSet, VBox musicLabled) {
 		System.out.println(hashSet.size());
 		Label temp[] = new Label[hashSet.size()];
@@ -463,6 +499,17 @@ public class MusicPlayerGUI extends Application implements Observer{
 		musicLabled.setSpacing(10);
 		return musicLabled;
 	}
+	/**
+	 * Adds sorted musicLabel to a VBox
+	 * 
+	 * <p>
+	 * 
+	 * This method takes a set that contains music title information. Then it loops though the set and
+	 * adds each song name to the VBox
+	 * @param hashSet a TreeSet of Strings that is sorted and contains the song names
+	 * @param musicLabled a VBox to be modified
+	 * @return the VBox that was inputed will be modified and returned
+	 */
 	
 	private VBox addMusicLables(TreeSet<String> hashSet, VBox musicLabled) {
 		System.out.println(hashSet.size());
@@ -496,7 +543,17 @@ public class MusicPlayerGUI extends Application implements Observer{
 		return musicLabled;
 	}
 
-	// Temporary function that fetches metadata and updates it.
+	
+
+	/**
+	 * Fetches metadata and updates it.
+	 * <p>
+	 * 
+	 * This method loops through the map and uses the handleMetadata method to set metadata
+	 * to the scene. It also listens to the change in the mao and repeats the process.
+	 * 
+	 * @param metamap an ObservableMap<String, Object> map that holds the metadata
+	 */
 	private void createMeta(ObservableMap<String, Object> metamap) {
 		if (!(metamap.size() == 0)) {
 			for (String key : metamap.keySet()) {
@@ -515,6 +572,16 @@ public class MusicPlayerGUI extends Application implements Observer{
 	      });
 
 	    } 
+	
+	/**
+	 * Sets the metadata to the scene
+	 * 
+	 * <p>
+	 * This method takes a key and a value and checks if it is an artist, a title, or
+	 * an album cover. Then, it sets the value to the appropriate nodes. 
+	 * @param key a String, contains the strings artist, title, or image
+	 * @param value a Object that can be a text or an image
+	 */
 	
 	private void handleMetadata(String key, Object value) {;
 	    if (key.equals("artist")) {
