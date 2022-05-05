@@ -1,4 +1,3 @@
-
 import java.io.IOException;
 import java.util.HashSet;
 
@@ -16,6 +15,8 @@ import javafx.collections.MapChangeListener;
 import javafx.collections.ObservableMap;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -23,6 +24,8 @@ import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
+import javafx.scene.effect.BlendMode;
+import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -37,13 +40,18 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.StrokeType;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import static java.lang.Math.random;
 
 /**
  * 
@@ -84,7 +92,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 	private Stage MainStage;
 	private Color white;
 	private Color black;
-	
+	private Group blendModeGroup;
 	
 	
 	/**
@@ -132,6 +140,35 @@ public class MusicPlayerGUI extends Application implements Observer{
 		artist = new Label();
 		title = new Label();
 		
+		// background circle
+		Group circles = new Group();
+        for (int i = 0; i < 30; i++) 
+        {
+           Circle circle = new Circle(150, Color.web("white", 0.05));
+           circle.setStrokeType(StrokeType.OUTSIDE);
+           circle.setStroke(Color.web("white", 0.16));
+           circle.setStrokeWidth(4);
+           circles.getChildren().add(circle);
+        }
+
+        circles.setEffect(new BoxBlur(10, 10, 3));
+
+        Rectangle colors = new Rectangle(MainScene.getWidth(), MainScene.getHeight(),
+                 new LinearGradient(0f, 1f, 1f, 0f, true, CycleMethod.NO_CYCLE, new 
+                     Stop[]{
+                        new Stop(0, Color.web("#f8bd55")),
+                        new Stop(0.14, Color.web("#c0fe56")),
+                        new Stop(0.28, Color.web("#5dfbc1")),
+                        new Stop(0.43, Color.web("#64c2f8")),
+                        new Stop(0.57, Color.web("#be4af7")),
+                        new Stop(0.71, Color.web("#ed5fc2")),
+                        new Stop(0.85, Color.web("#ef504c")),
+                        new Stop(1, Color.web("#f2660f")),}));
+            colors.widthProperty().bind(MainScene.widthProperty());
+            colors.heightProperty().bind(MainScene.heightProperty());
+
+            blendModeGroup = new Group(new Group(new Rectangle(MainScene.getWidth(), MainScene.getHeight(),
+                    Color.BLACK), circles), colors);
 		// setting up all artist properties
 		artist.setId("artist");
 	    artist.setTranslateX(0);
@@ -345,6 +382,14 @@ public class MusicPlayerGUI extends Application implements Observer{
 				title.setTextFill(black);
 				controller.setColorMode(false);
 				exitButton.setFill(new ImagePattern(exitDark));
+				// animation black
+				root.getChildren().remove(blendModeGroup);
+                blendModeGroup = 
+                        new Group(new Group(new Rectangle(MainScene.getWidth(), MainScene.getHeight(),
+                            Color.MEDIUMPURPLE), circles), colors);
+
+                colors.setBlendMode(BlendMode.OVERLAY);
+                root.getChildren().add(0, blendModeGroup);
 			} else {
 				MainScene.setFill(black);
 				MenuMode.setText("Light Mode: Off");
@@ -353,6 +398,13 @@ public class MusicPlayerGUI extends Application implements Observer{
 				title.setTextFill(white);
 				controller.setColorMode(true);
 				exitButton.setFill(new ImagePattern(exit));
+				// animation whiite
+				root.getChildren().remove(blendModeGroup);
+                blendModeGroup = 
+                        new Group(new Group(new Rectangle(MainScene.getWidth(), MainScene.getHeight(),
+                            black), circles), colors);
+                colors.setBlendMode(BlendMode.OVERLAY);
+                root.getChildren().add(0, blendModeGroup);
 			}
 		});
 
@@ -439,6 +491,26 @@ public class MusicPlayerGUI extends Application implements Observer{
 		root.getStylesheets().add(this.getClass().getResource("/root.css").toExternalForm());
 	    progressBarController();
 	    
+	    colors.setBlendMode(BlendMode.OVERLAY);
+        root.getChildren().add(blendModeGroup);
+        // animation timeline
+        Timeline timeline = new Timeline();
+        for (Node circle: circles.getChildren()) {
+            timeline.getKeyFrames().addAll(
+                new KeyFrame(Duration.ZERO, // set start position at 0
+                    new KeyValue(circle.translateXProperty(), random() * 800),
+                    new KeyValue(circle.translateYProperty(), random() * 600)
+                ),
+                new KeyFrame(new Duration(40000), // set end position at 40s
+                    new KeyValue(circle.translateXProperty(), random() * 800),
+                    new KeyValue(circle.translateYProperty(), random() * 600)
+                )
+            );
+        }
+        // play 40s of animation
+        timeline.setCycleCount(timeline.INDEFINITE);
+        timeline.play();
+	    
 	    // adding everything to the root
 	    root.getChildren().add(progressRec);
 		root.getChildren().add(title);
@@ -469,7 +541,6 @@ public class MusicPlayerGUI extends Application implements Observer{
 	 * @return the VBox that was inputed will be modified and returned
 	 */
 	private VBox addMusicLables(HashSet<String> hashSet, VBox musicLabled) {
-		System.out.println(hashSet.size());
 		Label temp[] = new Label[hashSet.size()];
 		int i = 0;
 		for(String songName: hashSet) {
@@ -491,7 +562,6 @@ public class MusicPlayerGUI extends Application implements Observer{
 				controller.setCurrentIndex(controller.getSongIndex(songName));
 				changeScene(MainScene);
 				playButton.setFill(new ImagePattern(pause));
-				System.out.println(controller.getCurrentSong().getName());
 			});
 			musicLabled.getChildren().add(temp[i]);
 			i += 1;
@@ -512,7 +582,6 @@ public class MusicPlayerGUI extends Application implements Observer{
 	 */
 	
 	private VBox addMusicLables(TreeSet<String> hashSet, VBox musicLabled) {
-		System.out.println(hashSet.size());
 		Label temp[] = new Label[hashSet.size()];
 		int i = 0;
 		for(String songName: hashSet) {
@@ -534,7 +603,6 @@ public class MusicPlayerGUI extends Application implements Observer{
 				controller.setCurrentIndex(controller.getSongIndex(songName));
 				changeScene(MainScene);
 				playButton.setFill(new ImagePattern(pause));
-				System.out.println(controller.getCurrentSong().getName());
 			});
 			musicLabled.getChildren().add(temp[i]);
 			i += 1;
@@ -564,7 +632,6 @@ public class MusicPlayerGUI extends Application implements Observer{
 	    	  
 	        @Override
 	        public void onChanged(Change<? extends String, ? extends Object> ch) {
-	        	System.out.println(ch.getKey());
 	        	if (ch.wasAdded()) {
 	            handleMetadata(ch.getKey(), ch.getValueAdded());
 	          }

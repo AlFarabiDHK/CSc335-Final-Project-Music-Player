@@ -1,15 +1,8 @@
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.TreeSet;
 
-import com.sun.media.jfxmedia.Media;
 
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;

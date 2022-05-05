@@ -70,7 +70,6 @@ public class MusicPlayerModel extends Observable
 			for (int i = 0; i < musicFiles.length; i++) 
 			{
 				allSongs.add(musicFiles[i]);
-				System.out.println(musicFiles[i]);
 			}
 		}
 		
@@ -155,7 +154,6 @@ public class MusicPlayerModel extends Observable
 	 */
 	public void playSong() 
 	{
-		System.out.println(isNext);
 		
 		if (isNext) 
 		{
@@ -298,7 +296,6 @@ public class MusicPlayerModel extends Observable
 			      FileWriter favWriter = new FileWriter("favorites.txt", true);
 			      favWriter.write(name + "\n");
 			      favWriter.close();
-			      System.out.println("Successfully wrote to the file.");
 			} 
 			
 			catch (IOException e) 
@@ -306,7 +303,6 @@ public class MusicPlayerModel extends Observable
 			      System.out.println("An error occurred.");
 			      e.printStackTrace();
 			}
-			System.out.println(favSongs.toString());
 			return true;
 		}
 		
@@ -314,7 +310,6 @@ public class MusicPlayerModel extends Observable
 		{
 			removeFavSong(name);
 			removeFavSongsFromFile(name);
-			System.out.println(favSongs.toString());
 			return false;
 		}
 	}
@@ -595,7 +590,6 @@ public class MusicPlayerModel extends Observable
 		i++;
 		}
 		
-		System.out.println("Got till here");
 		return i;
 	}
 	

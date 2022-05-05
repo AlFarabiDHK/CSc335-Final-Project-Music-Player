@@ -1,4 +1,3 @@
-
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
@@ -7,19 +6,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 
-import javafx.application.Application;
+import de.saxsys.javafx.test.JfxRunner;
+import de.saxsys.javafx.test.TestInJfxThread;
 import javafx.collections.ObservableMap;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.stage.Stage;
 
-
+@RunWith(JfxRunner.class)
 class MusicPlayerTests 
 {
 	private static MusicPlayerModel m;
@@ -34,27 +31,10 @@ class MusicPlayerTests
 	private static HashMap<File, ObservableMap<String, Object>> metadata;
 	private static boolean isPlaylistOver;
 	private static HashSet<String> favSongs;
-	
-	public static class AsNonApp extends Application {
-	    @Override
-	    public void start(Stage primaryStage) throws Exception {
-	        // noop
-	    }
-	}
 
-	@BeforeClass
-	public static void initJFX() 
-	{
-	    Thread t = new Thread("JavaFX Init Thread") {
-	        public void run() {
-	            Application.launch(AsNonApp.class, new String[0]);
-	        }
-	    };
-	    t.setDaemon(true);
-	    t.start();
-	}
 	
-	/*@BeforeAll
+	
+	@BeforeAll
 	public static void init() throws IOException
 	{
 		m = new MusicPlayerModel();
@@ -76,26 +56,32 @@ class MusicPlayerTests
 		metadata.put(allSongs.get(currentSongIndex), audio.getMetadata());
 		isNext = false;
 		isPlaylistOver = false;
-	}*/
+	}
 	
 	@Test
+	@TestInJfxThread
 	void testPlaySong() throws IOException
 	{
 		m = new MusicPlayerModel();
 		c = new MusicPlayerController(m);
 		
-		//c.playSong();
-		/*audioPlayer.play();
+		c.playSong();
+		audioPlayer.play();
 		c.pauseSong();
-		audioPlayer.pause();*/
+		audioPlayer.pause();
+		
+		assertEquals(audio, m.getAudio());
 		
 	}
 	
-	/*@Test
+	@Test
+	@TestInJfxThread
 	void testGetMax()
 	{
 		assertEquals(c.getMax(), audio.getDuration());
-	}*/
+	}
+	
+	
 	
 }
 	
