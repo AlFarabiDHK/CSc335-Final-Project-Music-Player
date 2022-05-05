@@ -45,6 +45,19 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+/**
+ * 
+ * @author Dhruv Bhatia, Muhtasim Al-Farabi, Shrey Goyal, Suryashree Ray
+ * 
+ * This is the View class in our MVC model. It runs the JavaFX scene that runs the music player app.
+ * It has several EventHandlers to listen for user mouse clicks and drags. It also has multiple scenes and our
+ * logic can switch between them. It can play, pause, seek, and shuffle a song. It uses
+ * observer/observable design pattern to communicate with the model directly. Our app can change between dark
+ * and light mode, can change equalizer settings, and can select any song from the library. Finally, every user
+ * can choose their favorite songs (and it's stored locally only). 
+ *
+ */
+
 public class MusicPlayerGUI extends Application implements Observer{
 
 	private MusicPlayerModel model;
@@ -143,29 +156,20 @@ public class MusicPlayerGUI extends Application implements Observer{
 		
 		MenuLibrary.setOnAction(e -> {
 			BorderPane bp = new BorderPane();
-			BorderPane bpS = new BorderPane();
 			HBox addLabel = new HBox(290);
-			HBox addLabelS = new HBox(290);
 			ScrollPane sp = new ScrollPane();
-			ScrollPane spS = new ScrollPane();
 			Label label = new Label("Library of Songs");
 				
 			if(controller.getColorMode()) {
 				sp.getStylesheets().add(getClass().getResource("/Menu.css").toExternalForm());
 				sp.setStyle("-fx-background: black;");
 				bp.setBackground(appBackground);
-				spS.getStylesheets().add(getClass().getResource("/Menu.css").toExternalForm());
-				spS.setStyle("-fx-background: black;");
-				bpS.setBackground(appBackground);
 				LibraryView.setBorder(new Border(new BorderStroke(black, BorderStrokeStyle.NONE, corner, BorderWidths.EMPTY)));
 				label.setStyle("-fx-text-fill:WHITE; -fx-font-weight: bold;-fx-font-size: 20px;");
 			}else {
 				sp.getStylesheets().add(getClass().getResource("/MenuDark.css").toExternalForm());
 				sp.setStyle("-fx-background: white;");
 				bp.setBackground(appBackgroundWhite);
-				spS.getStylesheets().add(getClass().getResource("/MenuDark.css").toExternalForm());
-				spS.setStyle("-fx-background: white;");
-				bpS.setBackground(appBackgroundWhite);
 				LibraryView.setBorder(new Border(new BorderStroke(white, BorderStrokeStyle.NONE, corner, BorderWidths.EMPTY)));
 				label.setStyle("-fx-text-fill: BLACK; -fx-font-weight: bold;-fx-font-size: 20px;");
 			}
@@ -173,25 +177,30 @@ public class MusicPlayerGUI extends Application implements Observer{
 			Button b = new Button("Sort");
 			LibraryView.setPadding(new Insets(20));
 			bp.setCenter(sp);
-			bpS.setCenter(spS);
+			sp.setContent(LibraryView);
 			
 			sp.setFitToWidth(true);
-			spS.setFitToWidth(true);
 			LibraryView.setBackground(appBackground);
 			LibraryView.setAlignment(Pos.CENTER);
 			
 			addLabel.getChildren().add(0, b);
 			addLabel.getChildren().add(0, label);
 			addLabel.getChildren().add(0, exitButton);
-			addLabelS.getChildren().add(0, b);
-			addLabelS.getChildren().add(0, label);
-			addLabelS.getChildren().add(0, exitButton);
-			LibraryView = addMusicLables(controller.getLibrary(), LibraryView);
+			
+			
 			bp.setTop(addLabel);
-			bpS.setTop(addLabelS);
+			
+			b.setOnMouseClicked(f -> {
+				if (!controller.getIsSorted()) {
+					LibraryView = addMusicLables(controller.getSortedLibrary(), LibraryView);
+					controller.setIsSorted(true);
+				} else {}
+				LibraryView = addMusicLables(controller.getLibrary(), LibraryView);
+				controller.setIsSorted(false);
+			});
 			
 			
-			sp.setContent(LibraryView);
+//			LibraryView = addMusicLables(controller.getLibrary(), LibraryView);
 			
 			Scene Library = new Scene(bp,windowWidth,windowHeight);
 			if(controller.getColorMode()) {
@@ -202,29 +211,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 				Library.setFill(white);
 			}
 			
-			Scene LibrarySorted = new Scene(bpS,windowWidth,windowHeight);
-			if(controller.getColorMode()) {
-				LibrarySorted.getStylesheets().add(getClass().getResource("/Menu.css").toExternalForm());
-				LibrarySorted.setFill(black);
-			}else {
-				LibrarySorted.getStylesheets().add(getClass().getResource("/MenuDark.css").toExternalForm());
-				LibrarySorted.setFill(white);
-			}
-			b.setOnMouseClicked(f -> {
-				if (!controller.getIsSorted()) {
-					LibraryView = addMusicLables(controller.getSortedLibrary(), LibraryView);
-					controller.setIsSorted(true);
-					spS.setContent(LibraryView);
-					changeScene(LibrarySorted);
-				} else {
-					LibraryView = addMusicLables(controller.getLibrary(), LibraryView);
-					controller.setIsSorted(false);
-					sp.setContent(LibraryView);
-					changeScene(Library);
-				}
-			});
 			changeScene(Library);
-//			LibraryView = addMusicLables(controller.getLibrary(), LibraryView);
 		});
 		
 		MenuFavSongs.setOnAction(e -> {
@@ -385,7 +372,6 @@ public class MusicPlayerGUI extends Application implements Observer{
 		
 	    
 	   
-	    // Need a default image
 	    albumCover = new ImageView();
 	    albumCover.setFitHeight(albumCoverDim);
 	    albumCover.setFitWidth(albumCoverDim);
@@ -522,6 +508,15 @@ public class MusicPlayerGUI extends Application implements Observer{
 	    }
 	  }
 	
+	/**
+	 * Controls the progress bar
+	 * 
+	 * <p>
+	 * 
+	 * This method is responsible for multiple event handlers that enables a working progress bar
+	 * that can be used to seek a song.
+	 */
+	
 	private void progressBarController() 
 	{
 		
@@ -578,6 +573,16 @@ public class MusicPlayerGUI extends Application implements Observer{
 	    
 	}
 	
+	/**
+	 * Changes a scene
+	 * 
+	 * <p>
+	 * 
+	 * This method takes a scene as input and sets the main stage to that scene. It also invokes a
+	 * fade animation. 
+	 * @param sc Scene to be set to the main stage
+	 */
+	
 	private void changeScene(Scene sc) {
 		Timeline timeline = new Timeline();
         KeyFrame key = new KeyFrame(Duration.millis(400),
@@ -591,6 +596,18 @@ public class MusicPlayerGUI extends Application implements Observer{
         });
         
 	}
+	
+	/**
+	 * This method is called whenever the observed object is changed.
+	 * 
+	 * <p>
+	 * This method is called whenever the observed object is changed. 
+	 * An application calls an Observable object's notifyObservers method 
+	 * to have all the object's observers notified of the change. 
+	 * @param o the observable object
+	 * @param arg an argument passed to the notifyObservers method
+	 * 
+	 */
 	
 	@Override
 	public void update(Observable o, Object arg) {
