@@ -1,9 +1,10 @@
+package Controller;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.TreeSet;
 
-
+import Model.MusicPlayerModel;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.scene.media.EqualizerBand;

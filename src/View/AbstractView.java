@@ -1,3 +1,5 @@
+package View;
+import Controller.MusicPlayerController;
 import javafx.scene.Node;
 
 /**

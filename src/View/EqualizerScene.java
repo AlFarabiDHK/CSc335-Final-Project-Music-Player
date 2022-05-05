@@ -1,3 +1,5 @@
+package View;
+import Controller.MusicPlayerController;
 import javafx.collections.ObservableList;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;

@@ -1,3 +1,4 @@
+package View;
 import java.io.IOException;
 import java.util.HashSet;
 
@@ -5,6 +6,8 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.TreeSet;
 
+import Controller.MusicPlayerController;
+import Model.MusicPlayerModel;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -783,4 +786,4 @@ public class MusicPlayerGUI extends Application implements Observer{
 	}
 
 	
-}}
+}

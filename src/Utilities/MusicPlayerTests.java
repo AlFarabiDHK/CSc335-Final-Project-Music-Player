@@ -1,3 +1,4 @@
+package Utilities;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
@@ -10,11 +11,26 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 
+import Controller.MusicPlayerController;
+import Model.MusicPlayerModel;
 import de.saxsys.javafx.test.JfxRunner;
 import de.saxsys.javafx.test.TestInJfxThread;
 import javafx.collections.ObservableMap;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+
+/**
+ * @author Dhruv Bhatia, Muhtasim Al-Farabi, Shrey Goyal, Suryashree Ray
+ * 
+ * Test Cases for MusicPlayer. 
+ * 
+ * These testcases won't run as we have JavaFX 
+ * components in our model and controller and it won't let us instantiate
+ * a model or controller. We tried making it into a Maven project and
+ * adding dependency on JavaFX but to be very honest nothing 
+ * seems to work at all. We tried our best.
+ *
+ */
 
 @RunWith(JfxRunner.class)
 class MusicPlayerTests 
@@ -81,7 +97,62 @@ class MusicPlayerTests
 		assertEquals(c.getMax(), audio.getDuration());
 	}
 	
+	@Test
+	@TestInJfxThread
+	void testSetAudioTime()
+	{
+		c.setAudioPlayerTime(0.9);
+		assertEquals(c.getAudioPlayer().getCurrentTime().toSeconds(), 0.9);
+	}
 	
+	@Test
+	@TestInJfxThread
+	void testGetEQBand()
+	{
+		assertEquals(c.getEqualizerBand(), audioPlayer.getAudioEqualizer().getBands());
+	}
+	
+	@Test
+	@TestInJfxThread
+	void testGetSongIndex()
+	{
+		assertEquals(c.getSongIndex("Beautiful Now"), 0);
+	}
+	
+	@Test
+	@TestInJfxThread
+	void testGetAudioPlayer()
+	{
+		assertEquals(c.getAudioPlayer(), audioPlayer);
+	}
+	
+	@Test
+	@TestInJfxThread
+	void testGetAudio()
+	{
+		assertEquals(m.getAudio(), audio);
+	}
+	
+	@Test
+	@TestInJfxThread
+	void testfetchMetaData()
+	{
+		assertEquals(c.fetchMetadata(allSongs.get(currentSongIndex)), audio.getMetadata());
+	}
+	
+	@Test
+	@TestInJfxThread
+	void testGetPlaylistOver()
+	{
+		assertEquals(m.getIsPlaylistOver(), false);
+	}
+	
+	@Test
+	@TestInJfxThread
+	void testGetCurrentSong()
+	{
+		assertEquals(c.getCurrentSong(), allSongs.get(currentSongIndex));
+	}
 	
 }
 	
