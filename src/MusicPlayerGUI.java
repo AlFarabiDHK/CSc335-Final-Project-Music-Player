@@ -57,7 +57,6 @@ import javafx.util.Duration;
  * can choose their favorite songs (and it's stored locally only). 
  *
  */
-
 public class MusicPlayerGUI extends Application implements Observer{
 
 	private MusicPlayerModel model;
@@ -69,7 +68,6 @@ public class MusicPlayerGUI extends Application implements Observer{
 	private static int smallButtonRadius = 25;
 	private static final int albumCoverDim = windowHeight/2;
 	private static double textOffset = 0.025 * windowHeight;
-	private VBox LibraryView;
 	private Label artist;
 	private Label title;
 	private ImageView albumCover;
@@ -104,7 +102,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 		black = Color.BLACK;
 		MainScene = new Scene(root,windowWidth,windowHeight);
 		MainScene.setFill(black);
-		MainScene.getStylesheets().add(getClass().getResource("/Menu.css").toExternalForm());
+		MainScene.getStylesheets().add(getClass().getResource("/MenuDark.css").toExternalForm());
 		Image play = new Image("/PlayButton.png");
 		Image shuffle = new Image("/ShuffleButton.png");
 		Image next = new Image("/NextButton.png");
@@ -118,7 +116,6 @@ public class MusicPlayerGUI extends Application implements Observer{
 		exit = new Image("/ExitButton.png");
 		artist = new Label();
 		title = new Label();
-		LibraryView = new VBox();
 		artist.setId("artist");
 	    
 	    artist.setTranslateX(0);
@@ -149,6 +146,8 @@ public class MusicPlayerGUI extends Application implements Observer{
 		Menu.getItems().add(MenuMode);
 		Circle exitButton = new Circle(windowWidth, smallButtonRadius, smallButtonRadius/3);
 		exitButton.setFill(new ImagePattern(exit));
+		exitButton.setScaleX(1.4);
+		exitButton.setScaleY(1.4);
 		exitButton.setOnMouseClicked(e->{
 			changeScene(MainScene);
 		});
@@ -156,22 +155,26 @@ public class MusicPlayerGUI extends Application implements Observer{
 		
 		MenuLibrary.setOnAction(e -> {
 			BorderPane bp = new BorderPane();
-			HBox addLabel = new HBox(290);
+			HBox addLabel = new HBox(330);
 			ScrollPane sp = new ScrollPane();
-			Label label = new Label("Library of Songs");
-				
+			Label label = new Label("Library");
+			VBox LibraryView = new VBox();
+			
+			LibraryView = addMusicLables(controller.getLibrary(), LibraryView);
 			if(controller.getColorMode()) {
-				sp.getStylesheets().add(getClass().getResource("/Menu.css").toExternalForm());
 				sp.setStyle("-fx-background: black;");
+				LibraryView.setStyle("-fx-background: black;");
 				bp.setBackground(appBackground);
-				LibraryView.setBorder(new Border(new BorderStroke(black, BorderStrokeStyle.NONE, corner, BorderWidths.EMPTY)));
+				sp.setBorder(new Border(new BorderStroke(black, BorderStrokeStyle.NONE, corner, BorderWidths.EMPTY)));
 				label.setStyle("-fx-text-fill:WHITE; -fx-font-weight: bold;-fx-font-size: 20px;");
-			}else {
 				sp.getStylesheets().add(getClass().getResource("/MenuDark.css").toExternalForm());
+			}else {
 				sp.setStyle("-fx-background: white;");
+				LibraryView.setStyle("-fx-background: white;");
 				bp.setBackground(appBackgroundWhite);
-				LibraryView.setBorder(new Border(new BorderStroke(white, BorderStrokeStyle.NONE, corner, BorderWidths.EMPTY)));
+				sp.setBorder(new Border(new BorderStroke(white, BorderStrokeStyle.NONE, corner, BorderWidths.EMPTY)));
 				label.setStyle("-fx-text-fill: BLACK; -fx-font-weight: bold;-fx-font-size: 20px;");
+				sp.getStylesheets().add(getClass().getResource("/Menu.css").toExternalForm());
 			}
 			
 			Button b = new Button("Sort");
@@ -190,33 +193,54 @@ public class MusicPlayerGUI extends Application implements Observer{
 			
 			bp.setTop(addLabel);
 			
-			b.setOnMouseClicked(f -> {
-				if (!controller.getIsSorted()) {
-					LibraryView = addMusicLables(controller.getSortedLibrary(), LibraryView);
-					controller.setIsSorted(true);
-				} else {}
-				LibraryView = addMusicLables(controller.getLibrary(), LibraryView);
-				controller.setIsSorted(false);
-			});
-			
-			
-//			LibraryView = addMusicLables(controller.getLibrary(), LibraryView);
-			
 			Scene Library = new Scene(bp,windowWidth,windowHeight);
 			if(controller.getColorMode()) {
-				Library.getStylesheets().add(getClass().getResource("/Menu.css").toExternalForm());
-				Library.setFill(black);
-			}else {
 				Library.getStylesheets().add(getClass().getResource("/MenuDark.css").toExternalForm());
+				Library.setFill(black);
+			} else {
+				Library.getStylesheets().add(getClass().getResource("/Menu.css").toExternalForm());
 				Library.setFill(white);
 			}
 			
 			changeScene(Library);
+			
+			ScrollPane spSorted = new ScrollPane();
+			VBox LibraryViewSorted = new VBox();
+			
+			LibraryViewSorted = addMusicLables(controller.getSortedLibrary(), LibraryViewSorted);
+			if(controller.getColorMode()) {
+				spSorted.setStyle("-fx-background: black;");
+				spSorted.setBorder(new Border(new BorderStroke(black, BorderStrokeStyle.NONE, corner, BorderWidths.EMPTY)));
+				spSorted.getStylesheets().add(getClass().getResource("/MenuDark.css").toExternalForm());
+			}else {
+				spSorted.setStyle("-fx-background: white;");
+				spSorted.setBorder(new Border(new BorderStroke(white, BorderStrokeStyle.NONE, corner, BorderWidths.EMPTY)));
+				spSorted.getStylesheets().add(getClass().getResource("/Menu.css").toExternalForm());
+			}
+
+			LibraryViewSorted.setPadding(new Insets(20));
+
+			spSorted.setContent(LibraryViewSorted);			
+			spSorted.setFitToWidth(true);
+			LibraryViewSorted.setBackground(appBackground);
+			LibraryViewSorted.setAlignment(Pos.CENTER);
+
+			b.setOnMouseClicked(f -> {
+				if (!controller.getIsSorted()) {
+					controller.setIsSorted(true);
+					bp.getChildren().remove(sp);
+					bp.setCenter(spSorted);
+				} else {
+					controller.setIsSorted(false);
+					bp.getChildren().remove(spSorted);
+					bp.setCenter(sp);
+				}
+			});
 		});
 		
 		MenuFavSongs.setOnAction(e -> {
 			BorderPane gp = new BorderPane();
-			HBox addLabel = new HBox(330);
+			HBox addLabel = new HBox(332);
 			ScrollPane favScroll = new ScrollPane();
 			Label label = new Label("Favorite Songs");
 
@@ -226,7 +250,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 				FavoriteView.setStyle("-fx-background-color: black");
 				favScroll.setStyle("-fx-background-color: black");
 				favScroll.setBorder(new Border(new BorderStroke(black, BorderStrokeStyle.NONE, corner, BorderWidths.EMPTY)));
-				favScroll.getStylesheets().add(getClass().getResource("/Menu.css").toExternalForm());
+				favScroll.getStylesheets().add(getClass().getResource("/MenuDark.css").toExternalForm());
 				label.setStyle("-fx-text-fill:WHITE; -fx-font-weight: bold; -fx-font-size: 20px;");
 			}
 			else {
@@ -234,7 +258,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 				FavoriteView.setStyle("-fx-background-color: white");
 				favScroll.setStyle("-fx-background-color: white");
 				favScroll.setBorder(new Border(new BorderStroke(white, BorderStrokeStyle.NONE, corner, BorderWidths.EMPTY)));
-				favScroll.getStylesheets().add(getClass().getResource("/MenuDark.css").toExternalForm());
+				favScroll.getStylesheets().add(getClass().getResource("/Menu.css").toExternalForm());
 				label.setStyle("-fx-text-fill: BLACK; -fx-font-weight: bold; -fx-font-size: 20px;");
 			}
 			gp.setCenter(favScroll);
@@ -252,11 +276,11 @@ public class MusicPlayerGUI extends Application implements Observer{
 			Scene Favorites = new Scene(gp,windowWidth,windowHeight);
 			if(controller.getColorMode()) {
 				Favorites.setFill(black);
-				Favorites.getStylesheets().add(getClass().getResource("/Menu.css").toExternalForm());
+				Favorites.getStylesheets().add(getClass().getResource("/MenuDark.css").toExternalForm());
 			}
 			else {
 				Favorites.setFill(white);
-				Favorites.getStylesheets().add(getClass().getResource("/MenuDark.css").toExternalForm());
+				Favorites.getStylesheets().add(getClass().getResource("/Menu.css").toExternalForm());
 			}
 			changeScene(Favorites);
 		});
@@ -270,12 +294,12 @@ public class MusicPlayerGUI extends Application implements Observer{
 			Scene Equalizer = new Scene(equalizer.getGridPane(),windowWidth,windowHeight);
 			if(controller.getColorMode()) {
 				Equalizer.setFill(black);
-				Equalizer.getStylesheets().add(getClass().getResource("/Menu.css").toExternalForm());
+				Equalizer.getStylesheets().add(getClass().getResource("/MenuDark.css").toExternalForm());
 				label.setStyle("-fx-text-fill:WHITE; -fx-font-weight: bold;");
 			}
 			else {
 				Equalizer.setFill(white);
-				Equalizer.getStylesheets().add(getClass().getResource("/MenuDark.css").toExternalForm());
+				Equalizer.getStylesheets().add(getClass().getResource("/Menu.css").toExternalForm());
 				label.setStyle("-fx-text-fill: BLACK; -fx-font-weight: bold;");
 			}
 			
@@ -372,6 +396,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 		
 	    
 	   
+	    // Need a default image
 	    albumCover = new ImageView();
 	    albumCover.setFitHeight(albumCoverDim);
 	    albumCover.setFitWidth(albumCoverDim);
@@ -419,7 +444,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 				temp[i].setTextFill(white);
 			}
 			else {
-				temp[i].getStylesheets().add(getClass().getResource("/labelDark.css").toExternalForm());
+				temp[i].getStylesheets().add(getClass().getResource("/labelLight.css").toExternalForm());
 				temp[i].setTextFill(black);
 			}
 			
@@ -451,7 +476,7 @@ public class MusicPlayerGUI extends Application implements Observer{
 				temp[i].setTextFill(white);
 			}
 			else {
-				temp[i].getStylesheets().add(getClass().getResource("/labelDark.css").toExternalForm());
+				temp[i].getStylesheets().add(getClass().getResource("/labelLight.css").toExternalForm());
 				temp[i].setTextFill(black);
 			}
 			
@@ -507,15 +532,14 @@ public class MusicPlayerGUI extends Application implements Observer{
 		  albumCover.setY(windowHeight * 1/12);
 	    }
 	  }
-	
 	/**
-	 * Controls the progress bar
-	 * 
-	 * <p>
-	 * 
-	 * This method is responsible for multiple event handlers that enables a working progress bar
-	 * that can be used to seek a song.
-	 */
+     * Controls the progress bar
+     * 
+     * <p>
+     * 
+     * This method is responsible for multiple event handlers that enables a working progress bar
+     * that can be used to seek a song.
+     */
 	
 	private void progressBarController() 
 	{
@@ -574,14 +598,14 @@ public class MusicPlayerGUI extends Application implements Observer{
 	}
 	
 	/**
-	 * Changes a scene
-	 * 
-	 * <p>
-	 * 
-	 * This method takes a scene as input and sets the main stage to that scene. It also invokes a
-	 * fade animation. 
-	 * @param sc Scene to be set to the main stage
-	 */
+     * Changes a scene
+     * 
+     * <p>
+     * 
+     * This method takes a scene as input and sets the main stage to that scene. It also invokes a
+     * fade animation. 
+     * @param sc Scene to be set to the main stage
+     */
 	
 	private void changeScene(Scene sc) {
 		Timeline timeline = new Timeline();
@@ -598,17 +622,16 @@ public class MusicPlayerGUI extends Application implements Observer{
 	}
 	
 	/**
-	 * This method is called whenever the observed object is changed.
-	 * 
-	 * <p>
-	 * This method is called whenever the observed object is changed. 
-	 * An application calls an Observable object's notifyObservers method 
-	 * to have all the object's observers notified of the change. 
-	 * @param o the observable object
-	 * @param arg an argument passed to the notifyObservers method
-	 * 
-	 */
-	
+     * This method is called whenever the observed object is changed.
+     * 
+     * <p>
+     * This method is called whenever the observed object is changed. 
+     * An application calls an Observable object's notifyObservers method 
+     * to have all the object's observers notified of the change. 
+     * @param o the observable object
+     * @param arg an argument passed to the notifyObservers method
+     * 
+     */
 	@Override
 	public void update(Observable o, Object arg) {
 		createMeta(controller.fetchMetadata(controller.getCurrentSong()));
